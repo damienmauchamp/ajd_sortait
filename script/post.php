@@ -5,10 +5,7 @@
 include 'start.php';
 
 $res = array();
-
-$json = file_get_contents("albums_" . date("Ymd") . ".json");
-//echo $json;
-
+$json = file_get_contents(dirname(__FILE__ ) . "/../data/" . $file_prefixe . date("Ymd") . ".json");
 $results = json_decode($json, true);
 $res["before"] = $results;
 
@@ -17,20 +14,23 @@ if (intval($results["todayCount"]) === 0) {
 	exit;
 }
 
-$go = true;
 foreach ($results["today"] as $year => $entities) {
 	foreach ($entities as $i => $album) {
 		if (!isPosted($album) && dateExceeded($album)) {
 			$results["today"][$year][$i]["posted"] = true;
 			$allow->twitter ? twitterPost($album) : null;
 			$allow->instagram ? instagramPost($album) : null;
+
+			if (isset($_GET["debug"]) && intval($_GET["debug"]) === 1)
+			    break;
+
 			//echo $album["album"] . " " . date("Y-m-d H:i:s", $album["post_date"]) . " < " . date("Y-m-d H:i:s", strtotime("now")) . "\n";
 		}
 		continue;
 	}
 }
 
-writeJSONFile($file_prefixe . date("Ymd"), json_encode($results));
+writeJSONFile($file_prefixe . date("Ymd"), $results);
 $res["after"] = $results;
 echo json_encode($res);
 
