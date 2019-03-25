@@ -221,7 +221,7 @@ function saveImg($url, $name)
 
 function writeJSONFile($name, $content)
 {
-    return file_put_contents("../data/$name.json", json_encode($content));
+    return file_put_contents(__DIR__ . "/../data/$name.json", json_encode($content));
 }
 
 function getAlbumsMatches($matches, $year)
