@@ -1,0 +1,8 @@
+{
+	"name": "damienmauchamp/album_fr_bot",
+	"require": {
+		"mgp25/instagram-php": "^5.0",
+		"vlucas/phpdotenv": "^3.3",
+		"abraham/twitteroauth": "^1.0"
+	}
+}
