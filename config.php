@@ -97,7 +97,7 @@ function instagramPost($item)
     }
 
     $ig = new Instagram();
-    
+
     try { // connexion
         $ig->login($_ENV["INSTAGRAM_USERNAME"], $_ENV["INSTAGRAM_PASSWD"]);
     } catch (\Exception $e) {
@@ -208,13 +208,51 @@ function twoDigits($num)
 function findOniTunes($album)
 {
     global $regexEP;
-    if ($req = get("https://itunes.apple.com/search?entity=album&country=fr&limit=100&term=" . trim(urlencode(albumStrFix($album["artist"]) . " " . preg_replace($regexEP, "", albumStrFix($album["album"])))))) {
+
+    $title = preg_replace($regexEP, "", albumStrFix($album["album"]));
+    $artist = albumStrFix($album["artist"]);
+    $year = $album["year"];
+    $month = $album["month"];
+    $day = $album["day"];
+
+    //echo albumStrFix($album["artist"]) . " " . preg_replace($regexEP, "", albumStrFix($album["album"]));
+
+    if ($req = get("https://itunes.apple.com/search?entity=album&country=fr&limit=100&term=" . trim(urlencode($artist . " " . $title)))) {
         $reponse = json_decode($req, true);
         if (intval($reponse["resultCount"]) === 0) { // pour l'instant, à changer (vérif date, copyright, artists, etc)
             return false;
         } else if (intval($reponse["resultCount"]) === 1) {
             return array("artworkUrl100" => $reponse["results"][0]["artworkUrl100"]); // pour l'instant, à changer (vérif date, copyright, artists, etc)
-        } else {
+        } else { // $reponse["resultCount"]) > 0 
+
+            // album name is the perfect match
+            foreach ($reponse["results"] as $i => $item) {
+                if ($title === $item["collectionName"]) {
+                    return array("artworkUrl100" => $item["artworkUrl100"]);
+                }
+            }
+
+            // release date perfect match
+            foreach ($reponse["results"] as $i => $item) {
+                if (preg_match("/^$year-$month-$day/", $item["releaseDate"])) {
+                    return array("artworkUrl100" => $item["artworkUrl100"]);
+                }
+            }
+
+            // release date perfect match year-month
+            foreach ($reponse["results"] as $i => $item) {
+                if (preg_match("/^$year-$month/", $item["releaseDate"])) {
+                    return array("artworkUrl100" => $item["artworkUrl100"]);
+                }
+            }
+
+            // copyright match
+            foreach ($reponse["results"] as $i => $item) {
+                if (preg_match("/^℗ $year /", $item["copyright"])) {
+                    return array("artworkUrl100" => $item["artworkUrl100"]);
+                }
+            }
+
             return array("artworkUrl100" => $reponse["results"][0]["artworkUrl100"]);
         }
     }
