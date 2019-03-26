@@ -2,10 +2,10 @@
 // POST à partir de 9h toutes les 10 minutes
 // TODO : today_notFound
 // cron : */10 8-19 * * *	php script_post.php
-include 'start.php';
+include dirname(__DIR__) . '/config.php';
 
 $res = array();
-$json = file_get_contents(dirname(__FILE__ ) . "/../data/" . $file_prefixe . date("Ymd") . ".json");
+$json = file_get_contents(dirname(__DIR__) . "/data/" . $file_prefixe . date("Ymd") . ".json");
 $results = json_decode($json, true);
 $res["before"] = $results;
 
@@ -17,9 +17,10 @@ if (intval($results["todayCount"]) === 0) {
 foreach ($results["today"] as $year => $entities) {
 	foreach ($entities as $i => $album) {
 		if (!isPosted($album) && dateExceeded($album)) {
-			$results["today"][$year][$i]["posted"] = true;
+			
 			$allow->twitter ? twitterPost($album) : null;
 			$allow->instagram ? instagramPost($album) : null;
+			$results["today"][$year][$i]["posted"] = true;
 
 			if (isset($_GET["debug"]) && intval($_GET["debug"]) === 1)
 			    break;

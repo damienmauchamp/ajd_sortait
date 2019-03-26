@@ -33,7 +33,7 @@ $img = (object)array(
     'dir' => $img_dir,
     'path' => dirname(__FILE__) . $img_dir,
     'ext' => '.jpg',
-    'width' => '1000'
+    'width' => '1800'
 );
 
 function generateHashtags($item)

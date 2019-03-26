@@ -1,7 +1,7 @@
 <?php
 // INIT 8h30
 // cron : 30 8 * * *	php script_init.php
-include 'start.php';
+include dirname(__DIR__) . '/config.php';
 
 $final = $albums = array();
 
