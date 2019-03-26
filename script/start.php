@@ -26,6 +26,7 @@ $heureStart = 10;
 $heureEnd = 16;
 $regex = "/^(\*|\-) (?<day>(\d|X){2})\/(?<month>\d{2}) \: (?<artist>.*) (-|–) (?<album>.*)$/m"; // mois non connu
 $uRegex = "/^(\*|\-) ((?<day>X{2})\/(?<month>X{2}) \: )?(?<inter>Du (?<iday1>(X|\d){2})\/(?<imonth1>(X|\d){2}) au (?<iday2>(X|\d){2})\/(?<imonth2>(X|\d){2}) :)?(?<artist>[^((X|\d{2})\/(X|\d{2}))].*) (- |– )(?<album>.*)$/m";
+$regexEP = "/\s+\(EP\)$/";
 $file_prefixe = "albums_";
 $img_dir = '/img/';
 $img = (object)array(
@@ -43,6 +44,23 @@ function generateHashtags($item)
     ));
 }
 
+function getCaption($item) {
+    $name = $item["album"];
+    $artist = ($item["artist"] !== "Artistes multiples" || $item["artist"] !== "Various Artists" || $item["artist"] !== "Multi-interprètes") ? $item["artist"] : "";
+    $year = $item["year"];
+    $old = date("Y") - intval($year);
+
+    $caption = "L'album ";
+    if (preg_match($regexEP, $item["album"])) {
+        $caption = "L'EP ";
+    } else if (preg_match("compilation", strtolower($item["album"]))) {
+        $caption = "La compilation ";
+    }
+
+    $caption .= "\"${name}\" ". $artist !== '' ? "de ${artist} " : "" ."sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
+    return $caption;
+}
+
 function removeNonHashtagCharacters($str)
 {
     return str_replace(array("-", " ", ".", "'", "\""), "", $str);
@@ -50,15 +68,14 @@ function removeNonHashtagCharacters($str)
 
 function twitterPost($item)
 {
-    $name = $item["album"];
-    $artist = $item["artist"];
+    //$name = $item["album"];
+    //$artist = $item["artist"];
+    //$year = $item["year"];
+    //$old = date("Y") - intval($year);
+    //$caption = "L'album \"${name}\" de ${artist} sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
+
     $artwork = dirname(__FILE__) . $item["artwork"];
-    $year = $item["year"];
-
-    $old = date("Y") - intval($year);
-
-    $caption = "L'album \"${name}\" de ${artist} sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
-
+    $caption = getCaption($item);
     $hashtags = generateHashtags($item);
 
     $connection = new TwitterOAuth($_ENV["TWITTER_API_KEY"], $_ENV["TWITTER_API_SECRET_KEY"], $_ENV["TWITTER_ACCESS_TOKEN"], $_ENV["TWITTER_ACCESS_TOKEN_SECRET"]);
@@ -72,27 +89,26 @@ function twitterPost($item)
 
 function instagramPost($item)
 {
-    $name = $item["album"];
-    $artist = $item["artist"];
+    //$name = $item["album"];
+    //$artist = $item["artist"];
+    //$year = $item["year"];
+    //$old = date("Y") - intval($year);
+    //$caption = "L'album \"${name}\" de ${artist} sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
+
     $artwork = dirname(__FILE__) . $item["artwork"];
-    $year = $item["year"];
-
-    $old = date("Y") - intval($year);
-
-    $caption = "L'album \"${name}\" de ${artist} sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
-
+    $caption = getCaption($item);
     $hashtags = generateHashtags($item);
 
     $ig = new Instagram();
 
-    try {
+    try { // connexion
         $ig->login($_ENV["INSTAGRAM_USERNAME"], $_ENV["INSTAGRAM_PASSWD"]);
     } catch (\Exception $e) {
         echo 'Something went wrong (1): ' . $e->getMessage() . "\n";
         exit(0);
     }
 
-    try {
+    try { // publication
         $photo = new \InstagramAPI\Media\Photo\InstagramPhoto($artwork);
         $ig->timeline->uploadPhoto($photo->getFile(), ['caption' => $caption . "\n\n" . $hashtags]);
     } catch (\Exception $e) {
@@ -194,7 +210,8 @@ function twoDigits($num)
 
 function findOniTunes($album)
 {
-    if ($req = get("https://itunes.apple.com/search?entity=album&country=fr&limit=100&term=" . urlencode($album["artist"] . " " . $album["album"]))) {
+    global $regexEP;
+    if ($req = get("https://itunes.apple.com/search?entity=album&country=fr&limit=100&term=" . trim(urlencode(albumStrFix($album["artist"]) . " " . preg_replace($regexEP, "", albumStrFix($album["album"])))))) {
         $reponse = json_decode($req, true);
         if (intval($reponse["resultCount"]) === 0) { // pour l'instant, à changer (vérif date, copyright, artists, etc)
             return false;
@@ -205,6 +222,10 @@ function findOniTunes($album)
         }
     }
     return false;
+}
+
+function albumStrFix($str) {
+    return str_replace(array("Artistes multiples", "Various Artists", "Multi-interprètes", "Compilation", "compilation", "\""), "", str_replace("&amp;", "&", $str));
 }
 
 function saveImg($url, $name)
