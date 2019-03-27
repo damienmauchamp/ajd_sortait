@@ -15,6 +15,8 @@ if (is_file(__DIR__ . '/.env')) {
     $dotenv->load();
 }
 
+$preEnv = $_ENV["ENVIRONMENT"] === "dev" ? "DEV_" : "";
+
 $allow = (object)array(
     "twitter" => isset($_GET["twitter"]) ? $_GET["twitter"] : true,
     "instagram" => isset($_GET["instagram"]) ? $_GET["instagram"] : true,
@@ -273,18 +275,16 @@ function findArtistInstagramUsername($query, $ig = null, $minLength = 5) {
 
 function instagramPost($item)
 {
+    global $preEnv;
+
     $artwork = __DIR__ . $item["artwork"];
     $caption = getCaption($item);
     $hashtags = generateHashtags($item);
 
-    if ($_ENV["ENVIRONMENT"] === "dev") {
-        return realpath($artwork);
-    }
-
     $ig = new Instagram();
 
     try { // connexion
-        $ig->login($_ENV["INSTAGRAM_USERNAME"], $_ENV["INSTAGRAM_PASSWD"]);
+        $ig->login($_ENV[$preEnv . "INSTAGRAM_USERNAME"], $_ENV[$preEnv . "INSTAGRAM_PASSWD"]);
     } catch (\Exception $e) {
         echo 'Something went wrong (1): ' . $e->getMessage() . "\n";
         exit(0);
@@ -295,12 +295,16 @@ function instagramPost($item)
         $userTag = "@" . $user['username'] . " ";
     }
 
+    $media_id = "";
+
     try { // publication
         $photo = new \InstagramAPI\Media\Photo\InstagramPhoto($artwork);
-        $ig->timeline->uploadPhoto($photo->getFile(), ['caption' => $caption . "\n\n" . $userTag . $hashtags]);
+        $media_id = $ig->timeline->uploadPhoto($photo->getFile(), ['caption' => $caption . "\n\n" . $userTag . $hashtags]);
     } catch (\Exception $e) {
         echo 'Something went wrong (2): ' . $e->getMessage() . "\n";
     }
+
+    return $media_id;
 
 }
 

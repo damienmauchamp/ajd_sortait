@@ -18,12 +18,18 @@ foreach ($results["today"] as $year => $entities) {
 	foreach ($entities as $i => $album) {
 		if (!isPosted($album) && dateExceeded($album)) {
 			
-			$allow->twitter ? twitterPost($album) : null;
-			$allow->instagram ? instagramPost($album) : null;
+			$twitter = twitterPost($album);
+			$instagram = instagramPost($album);
 			$results["today"][$year][$i]["posted"] = true;
 
-			if (isset($_GET["debug"]) && intval($_GET["debug"]) === 1)
+			if (isset($_GET["debug"]) && intval($_GET["debug"]) === 1) {
+				header("Content-type:text/html");
+				ini_set("xdebug.var_display_max_children", -1);
+				ini_set("xdebug.var_display_max_data", -1);
+				ini_set("xdebug.var_display_max_depth", -1);
+				var_dump($instagram);
 			    break;
+			}
 
 			//echo $album["album"] . " " . date("Y-m-d H:i:s", $album["post_date"]) . " < " . date("Y-m-d H:i:s", strtotime("now")) . "\n";
 		}
