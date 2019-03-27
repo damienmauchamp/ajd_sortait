@@ -8,7 +8,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use Abraham\TwitterOAuth\TwitterOAuth;
 use \InstagramAPI\Instagram;
 
-//Instagram::$allowDangerousWebUsageAtMyOwnRisk = true;
+\InstagramAPI\Instagram::$allowDangerousWebUsageAtMyOwnRisk = true;
 
 if (is_file(__DIR__ . '/.env')) {
     $dotenv = Dotenv\Dotenv::create(__DIR__);
@@ -58,7 +58,7 @@ function getCaption($item) {
         $caption = "La compilation ";
     }
 
-    $caption .= "\"${name}\" ". $artist !== '' ? "de ${artist} " : "" ."sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
+    $caption .= "\"${name}\" ". ($artist !== '' ? "de ${artist} " : "") ."sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
     return $caption;
 }
 
