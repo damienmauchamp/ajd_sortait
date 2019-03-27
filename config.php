@@ -205,6 +205,7 @@ function twitterPost($item)
     }
 
     $connection = new TwitterOAuth($_ENV["TWITTER_API_KEY"], $_ENV["TWITTER_API_SECRET_KEY"], $_ENV["TWITTER_ACCESS_TOKEN"], $_ENV["TWITTER_ACCESS_TOKEN_SECRET"]);
+    $connection->setTimeouts(60, 30);
     $media = $connection->upload('media/upload', array('media' => $artwork));
     $parameters = [
         'status' => $caption . "\n\n" . $hashtags,
