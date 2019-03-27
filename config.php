@@ -290,12 +290,14 @@ function instagramPost($item)
         exit(0);
     }
 
-    //$user = findArtistInstagramUsername($item["artist"]);
-    // TODO : tag user
+    $userTag = "";
+    if ($user = findArtistInstagramUsername($item["artist"])) {
+        $userTag = "@" . $user['username'] . " ";
+    }
 
     try { // publication
         $photo = new \InstagramAPI\Media\Photo\InstagramPhoto($artwork);
-        $ig->timeline->uploadPhoto($photo->getFile(), ['caption' => $caption . "\n\n" . $hashtags]);
+        $ig->timeline->uploadPhoto($photo->getFile(), ['caption' => $caption . "\n\n" . $userTag . $hashtags]);
     } catch (\Exception $e) {
         echo 'Something went wrong (2): ' . $e->getMessage() . "\n";
     }

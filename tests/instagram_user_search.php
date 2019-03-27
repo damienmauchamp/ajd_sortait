@@ -9,6 +9,6 @@ Instagram::$allowDangerousWebUsageAtMyOwnRisk = true;
 
 $query = isset($_GET['q']) ? $_GET['q'] : "";
 
-$res = findArtistInstagramUsername($query, $ig);
+$res = findArtistInstagramUsername($query);
 
 echo json_encode($res);
