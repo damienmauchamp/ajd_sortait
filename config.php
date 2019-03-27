@@ -44,12 +44,26 @@ function generateHashtags($item)
     ));
 }
 
+function isVowel($char) {
+    return in_array(strtolower($char), array('a', 'e', 'i', 'o', 'u', 'y'));
+}
+
 function getCaption($item) {
     global $regexEP;
+    
     $name = $item["album"];
-    $artist = ($item["artist"] !== "Artistes multiples" || $item["artist"] !== "Various Artists" || $item["artist"] !== "Multi-interprètes") ? $item["artist"] : "";
     $year = $item["year"];
     $old = date("Y") - intval($year);
+
+    $artist = ($item["artist"] !== "Artistes multiples" || $item["artist"] !== "Various Artists" || $item["artist"] !== "Multi-interprètes") ? $item["artist"] : "";
+    if ($artist !== '') {
+        if (isVowel($artist[0])) {
+            $artist = "d'${artist} ";
+        } else {
+            $artist = "de ${artist} ";
+        }
+    }
+
 
     $caption = "L'album ";
     if (preg_match($regexEP, $item["album"])) {
@@ -58,7 +72,8 @@ function getCaption($item) {
         $caption = "La compilation ";
     }
 
-    $caption .= "\"${name}\" ". ($artist !== '' ? "de ${artist} " : "") ."sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
+    //$caption .= "\"${name}\" ". ($artist !== '' ? "de ${artist} " : "") ."sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
+    $caption .= "\"${name}\" ${artist}sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
     return $caption;
 }
 
