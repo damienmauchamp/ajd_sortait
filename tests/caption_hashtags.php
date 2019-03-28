@@ -37,10 +37,17 @@ $items = array(
 		"year" => 2000,
 		"month" => "03",
 		"day" => "28"
+	),
+	array(
+		"album" => "Ennemi de l'Ordre (EP)",
+		"artist" => "Casey",
+		"year" => 2006,
+		"month" => "03",
+		"day" => "28"
 	)
 );
 
-$item = $items[4];
+$item = $items[5];
 echo json_encode(array(
 	"caption" => getCaption($item),
 	"hashtags" => generateHashtags($item),

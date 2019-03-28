@@ -41,7 +41,7 @@ $img = (object)array(
 function generateHashtags($item)
 {
     return implode(" ", array(
-        "#" . implode("", array_map('ucfirst', explode(" ", removeNonHashtagCharacters($item["album"])))), // album
+        "#" . implode("", array_map('ucfirst', explode(" ", removeNonHashtagCharacters(preg_replace("/ +\((EP|Maxi)\)$/", "", $item["album"]))))), // album
         "#" . implode("", array_map('ucfirst', explode(" ", removeNonHashtagCharacters($item["artist"])))) // artist
     ));
 }
@@ -77,6 +77,7 @@ function getCaption($item) {
     $caption = "L'album ";
     if (preg_match($regexEP, $item["album"])) {
         $caption = "L'EP ";
+        $name = preg_replace("/ +\(EP\)$/", "", $name);
     } else if (preg_match("/compilation/", strtolower($item["album"]))) {
         $caption = "La compilation ";
     }
