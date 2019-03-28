@@ -232,13 +232,22 @@ function twitterPost($item)
     return $connection->post('statuses/update', $parameters);
 }
 
+function preg_in_array($needle, $haystack) {
+    foreach ($haystack as $h) {
+        if (preg_match("/${h}/", $needle)) {
+            return true;
+        }
+    }
+    return false;
+}
 
-function findArtistInstagramUsername($query, $ig = null, $minLength = 5) {
+function findArtistInstagramUsername($query, $year = 0, $ig = null, $minLength = 5) {
     $return = null;
 
-    if (strlen($query) < $minLength) {
+    $exclude = array("assassinscreed", "_us", "_uk");
+
+    if (strlen($query) < $minLength || $year < 2005) {
         return $return;
-        exit;
     }
 
     if (!$ig) {
@@ -264,7 +273,7 @@ function findArtistInstagramUsername($query, $ig = null, $minLength = 5) {
             $literal_match = $query_pure === $fullname_pure || $query_pure === $username_pure;
             $preg_match = preg_match("/(${query_pure})/", $fullname_pure) || preg_match("/${query_pure}/", $username_pure);
 
-            if ($user->getIsVerified() && $preg_match) {
+            if ($user->getIsVerified() && $preg_match && !preg_in_array($username_pure, $exclude)) {
 
                 $debug = array(
                     "query" => $query,
@@ -310,7 +319,7 @@ function instagramPost($item)
     }
 
     $userTag = "";
-    if ($user = findArtistInstagramUsername($item["artist"])) {
+    if ($user = findArtistInstagramUsername($item["artist"], $item["year"])) {
         $userTag = "@" . $user['username'] . " ";
     }
 

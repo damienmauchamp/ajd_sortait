@@ -8,7 +8,7 @@ use \InstagramAPI\Instagram;
 Instagram::$allowDangerousWebUsageAtMyOwnRisk = true;
 
 $query = isset($_GET['q']) ? $_GET['q'] : "";
-
-$res = findArtistInstagramUsername($query);
+$year = isset($_GET['year']) ? intval($_GET['year']) : 0;
+$res = findArtistInstagramUsername($query, $year);
 
 echo json_encode($res);
