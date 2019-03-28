@@ -41,8 +41,8 @@ $img = (object)array(
 function generateHashtags($item)
 {
     return implode(" ", array(
-        "#" . implode("", explode(" ", removeNonHashtagCharacters($item["album"]))), // album
-        "#" . implode("", explode(" ", removeNonHashtagCharacters($item["artist"]))) // artist
+        "#" . implode("", array_map('ucfirst', explode(" ", removeNonHashtagCharacters($item["album"])))), // album
+        "#" . implode("", array_map('ucfirst', explode(" ", removeNonHashtagCharacters($item["artist"])))) // artist
     ));
 }
 
@@ -58,9 +58,16 @@ function getCaption($item) {
     $old = date("Y") - intval($year);
 
     $artist = ($item["artist"] !== "Artistes multiples" || $item["artist"] !== "Various Artists" || $item["artist"] !== "Multi-interprètes") ? $item["artist"] : "";
+
     if ($artist !== '') {
         if (isVowel($artist[0])) {
             $artist = "d'${artist} ";
+        } else if (startsWith(strtolower($artist), "les")) {
+            $artist = preg_replace("/^(l|L)es /", "", $artist);
+            $artist = "des ${artist} " ;
+        } else if (startsWith(strtolower($artist), "le")) {
+            $artist = preg_replace("/^(l|L)e /", "", $artist);
+            $artist = "du ${artist} " ;
         } else {
             $artist = "de ${artist} ";
         }
@@ -79,9 +86,20 @@ function getCaption($item) {
     return $caption;
 }
 
+function startsWith($haystack, $needle)
+{
+     return (substr($haystack, 0, strlen($needle)) === $needle);
+}
+
+function endsWith($haystack, $needle)
+{
+    $length = strlen($needle);
+    return ($length == 0) ? true : (substr($haystack, - $length) === $needle);
+}
+
 function removeNonHashtagCharacters($str)
 {
-    return str_replace(array("-", " ", ".", "'", "\""), "", $str);
+    return str_replace(array("-", ".", "'", "\""), "", $str);
 }
 
 function remove_accents($string) {

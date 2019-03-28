@@ -23,7 +23,25 @@ $items = array(
 		"year" => 2012,
 		"month" => "2012",
 		"day" => "26"
+	),
+	array(
+		"album" => "test",
+		"artist" => "Les test",
+		"year" => 2000,
+		"month" => "03",
+		"day" => "28"
+	),
+	array(
+		"album" => "test de test",
+		"artist" => "Le collectif",
+		"year" => 2000,
+		"month" => "03",
+		"day" => "28"
 	)
 );
 
-echo getCaption($items[2]);
+$item = $items[4];
+echo json_encode(array(
+	"caption" => getCaption($item),
+	"hashtags" => generateHashtags($item),
+));
