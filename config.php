@@ -15,7 +15,7 @@ if (is_file(__DIR__ . '/.env')) {
     $dotenv->load();
 }
 
-$preEnv = $_ENV["ENVIRONMENT"] === "dev" ? "DEV_" : "";
+$preEnv = isset($_ENV["ENVIRONMENT"]) && $_ENV["ENVIRONMENT"] === "dev" ? "DEV_" : "";
 
 $allow = (object)array(
     "twitter" => isset($_GET["twitter"]) ? $_GET["twitter"] : true,
