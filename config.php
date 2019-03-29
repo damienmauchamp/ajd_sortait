@@ -100,7 +100,7 @@ function endsWith($haystack, $needle)
 
 function removeNonHashtagCharacters($str)
 {
-    return str_replace(array("-", ".", "'", "\""), "", $str);
+    return str_replace(array("-", ".", "'", "\"", "(", ")", "{", "}", "[", "]"), "", $str);
 }
 
 function remove_accents($string) {
