@@ -53,7 +53,7 @@ function isVowel($char) {
 function getCaption($item) {
     global $regexEP;
     
-    $name = $item["album"];
+    $name = str_replace("&amp;", "&", $item["album"]);
     $year = $item["year"];
     $old = date("Y") - intval($year);
 
@@ -100,7 +100,7 @@ function endsWith($haystack, $needle)
 
 function removeNonHashtagCharacters($str)
 {
-    return str_replace(array("-", ".", "'", "\"", "(", ")", "{", "}", "[", "]"), "", $str);
+    return str_replace(array("-", ".", "'", "\"", "(", ")", "{", "}", "[", "]", "&"), "", $str);
 }
 
 function remove_accents($string) {
