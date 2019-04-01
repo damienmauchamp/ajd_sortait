@@ -10,11 +10,24 @@ $genius_api = "https://api.genius.com";
 $id_annotation = "9169440";
 
 
+// test function
+$tag = 'img'; // what I'm loking for
+
+function findGeniusArtwork($dom) {
+	$prev = false;
+	$res = [];
+	array_walk_recursive($dom, function($value, $key) use (&$prev, &$res){
+		if ($key === "tag" && $value === "img") {
+			$prev = true;
+		} else if ($prev && $key === "src") {
+			$res[] = $value;
+			return;
+		}
+	});
+	return isset($res[0]) ? $res[0] : null;
+}
 
 // TODO : class
-
-
-//echo $json;exit;
 
 // GET /annotations/:id
 // 	:id ID of the annotation
@@ -33,6 +46,9 @@ if (intval($query["meta"]["status"]) === 200) {
 	$html = isset($body["html"]) ? $body["html"] : null;
 	$plain = isset($body["plain"]) ? $body["plain"] : null;
 
+
+	$img = findGeniusArtwork($dom);
+	/*
 	if ($dom) {
 		if ($dom["tag"] === "root") {
 			$root = $dom["children"];
@@ -47,13 +63,13 @@ if (intval($query["meta"]["status"]) === 200) {
 				}
 			}
 		}
-	}
+	}*/
 } else {
 	echo "[Erreur] code: " . $query["meta"]["status"];
 	exit;
 }
 
-echo json_encode($img["src"]);
+echo json_encode($img);
 
 
 //response->annotation->body->dom->(tag=p)children->(tag=p)children->(tag=img)attributes->src
