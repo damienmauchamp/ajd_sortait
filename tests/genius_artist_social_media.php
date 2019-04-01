@@ -81,5 +81,3 @@ if ($query["meta"]["status"] === 200) {
 }
 
 echo json_encode($artist_socials);
-
-//response->annotation->body->dom->(tag=p)children->(tag=p)children->(tag=img)attributes->src
