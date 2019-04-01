@@ -27,6 +27,7 @@ $anneeEnd = date("Y") - 1;
 $heureStart = 10;
 $heureEnd = 16;
 $regex = "/^(\*|\-) (?<day>(\d|X){2})\/(?<month>\d{2}) \: (?<artist>.*) (-|–) (?<album>.*)$/m"; // mois non connu
+$regex_with_id = '/(?:<(?:a).*?data-id="(?<annotation_id>[^"]*?)".*?>)?(?:\*|\-) (?<day>(?:\d|X){2})\/(?<month>\d{2}) \: (?<artist>(?:(?!\s-\s).)*)(?:\s(?:-|–)\s)(?:<i>)?(?<album>(?:(?!<\/?(i|a|br)>).)*)(?:\s*<\/i>\s*)?(?:<\/a>)?/';
 $uRegex = "/^(\*|\-) ((?<day>X{2})\/(?<month>X{2}) \: )?(?<inter>Du (?<iday1>(X|\d){2})\/(?<imonth1>(X|\d){2}) au (?<iday2>(X|\d){2})\/(?<imonth2>(X|\d){2}) :)?(?<artist>[^((X|\d{2})\/(X|\d{2}))].*) (- |– )(?<album>.*)$/m";
 $regexEP = "/\s+\(EP\)$/";
 $file_prefixe = "albums_";
@@ -512,8 +513,10 @@ function getAlbumsMatches($matches, $year)
             "day" => $item["day"] !== "XX" ? $item["day"] : "",
             "month" => $item["month"],
             "year" => $year,
-            "artist" => trim($item["artist"]),
-            "album" => trim($item["album"]),
+            "artist" => trim(strip_tags(html_entity_decode($item["artist"]))),
+            "album" => trim(strip_tags(html_entity_decode($item["album"]))),
+            // genius
+            "annotation_id" => isset($item["annotation_id"]) ? $item["annotation_id"] : null,
             //"db" => "('".addslashes($item["artist"])."', '".addslashes($item["album"])."', '" . $year . "-" . $item["month"] . "-" . $item["day"] . "'),"
         );
     }
@@ -555,7 +558,7 @@ function getUnknownAlbumsMatches($matches, $year)
     return $entities;
 }
 
-function get($url)
+function get($url, $source = false)
 {
     $user_agent = 'Mozilla/5.0 (Windows NT 6.1; rv:8.0) Gecko/20100101 Firefox/8.0';
 
@@ -588,6 +591,14 @@ function get($url)
 
     $header['errno'] = $err;
     $header['errmsg'] = $errmsg;
-    $header['content'] = strip_tags($content);
+    $header['content'] = $source ? trim($content) : strip_tags($content);
     return $header["content"];
+}
+
+// TODO : clean
+function cleanString($string) {
+    $search = array('&#8234;', '&lrm;', '&#8236;', '&#8206;');
+    $replace = array('', '', '', '');
+
+    return str_replace($search, $replace, preg_replace('/(\x{200e}|\x{200f})/u', '',  str_replace("–", "-", $string)));
 }
