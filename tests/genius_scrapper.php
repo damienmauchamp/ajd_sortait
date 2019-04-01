@@ -21,8 +21,5 @@ foreach($dom->find('.lyrics') as $element) {
 	$raw .= htmlspecialchars_decode($element->plaintext);
 }
 
-echo $raw;
-exit;
-
-echo json_encode($m);
+echo json_encode(array("matches" => $m, "raw" => $raw));
 exit;
