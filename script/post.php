@@ -17,6 +17,16 @@ if (intval($results["todayCount"]) === 0) {
 foreach ($results["today"] as $year => $entities) {
 	foreach ($entities as $i => $album) {
 		if (!isPosted($album) && dateExceeded($album)) {
+
+			//x->rechercheSocials
+				// ajouter à un artists.json ???
+			//x->twitterPost():tweetId
+			//x->instagramPost():igId
+			//x->setPosted();
+
+			//si echec :
+			//	ajouter à "reste" ?
+			// 	poster le reste à la fin de la journée
 			
 			$twitter = twitterPost($album);
 			$instagram = instagramPost($album);
