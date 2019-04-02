@@ -3,6 +3,11 @@
 // TODO : today_notFound
 // cron : */10 8-19 * * *	php script_post.php
 include dirname(__DIR__) . '/config.php';
+//header("Content-type:text/html");
+
+use \Bot\Album;
+use \Bot\Post\TwitterPost;
+use \Bot\Post\InstagramPost;
 
 $res = array();
 $json = file_get_contents(dirname(__DIR__) . "/data/" . $file_prefixe . date("Ymd") . ".json");
@@ -18,6 +23,15 @@ foreach ($results["today"] as $year => $entities) {
 	foreach ($entities as $i => $album) {
 		if (!isPosted($album) && dateExceeded($album)) {
 
+			$item = new Album($album);
+			$twitter = new TwitterPost($item);
+			$instagram = new InstagramPost($item);
+			//echo json_encode($instagram->post());
+			//$instagram = new instagramPost($item);
+			//var_dump($twitter->content);
+			//var_dump(new instagramPost($item));
+			//exit;
+
 			//x->rechercheSocials
 				// ajouter à un artists.json ???
 			//x->twitterPost():tweetId
@@ -28,8 +42,8 @@ foreach ($results["today"] as $year => $entities) {
 			//	ajouter à "reste" ?
 			// 	poster le reste à la fin de la journée
 			
-			$twitter = twitterPost($album);
-			$instagram = instagramPost($album);
+			//$twitter = twitterPost($album);
+			//$instagram = instagramPost($album);
 			$results["today"][$year][$i]["posted"] = true;
 
 			if (isset($_GET["debug"]) && intval($_GET["debug"]) === 1) {

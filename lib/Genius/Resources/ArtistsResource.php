@@ -28,7 +28,7 @@ class ArtistsResource extends AbstractResource
 				"instagram" => $artist["instagram_name"]
 			);
 
-    		return json_encode($artist_socials);
+    		return $artist_socials;
     	} else {
 	    	return false;
 	    }

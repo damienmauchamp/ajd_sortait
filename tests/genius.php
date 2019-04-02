@@ -13,6 +13,6 @@ header("Content-type:text/html");
 //echo $genius->getSearchResource()->getArtistId("IAM");
 
 //echo $genius->getArtistsResource()->getArtistSocials($genius->getSearchResource()->getArtistId("IAM"));
-//echo $genius->getArtistsResource()->getArtistSocials($genius->getSearchResource()->getArtistId(array("album" => "demain c'est loin", "artist" => "IAM"))); // OK
+//echo json_encode($genius->getArtistsResource()->getArtistSocials($genius->getSearchResource()->getArtistId(array("album" => "demain c'est loin", "artist" => "IAM")))); // OK
 
 //echo $genius->getAnnotationsResource()->getFirstImage(9169440); // OK

@@ -12,7 +12,9 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Genius\\": "lib/Genius"
+			"Genius\\": "lib/Genius",
+			"Bot\\": "lib/Bot",
+			"Bot\\Post\\": "lib/Post"
 		}
 	}
 }

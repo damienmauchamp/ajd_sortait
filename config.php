@@ -49,6 +49,10 @@ function generateHashtags($item)
     ));
 }
 
+function startsWithVowel($str) {
+    return isVowel(strtolower(remove_accents($str))[0]);
+}
+
 function isVowel($char) {
     return in_array(strtolower($char), array('a', 'e', 'i', 'o', 'u', 'y'));
 }
@@ -228,6 +232,7 @@ function twitterPost($item)
 
     $connection = new TwitterOAuth($_ENV["TWITTER_API_KEY"], $_ENV["TWITTER_API_SECRET_KEY"], $_ENV["TWITTER_ACCESS_TOKEN"], $_ENV["TWITTER_ACCESS_TOKEN_SECRET"]);
     $connection->setTimeouts(60, 30);
+
     $media = $connection->upload('media/upload', array('media' => $artwork));
     $parameters = [
         'status' => $caption . "\n\n" . $hashtags,
@@ -314,7 +319,6 @@ function instagramPost($item)
     $hashtags = generateHashtags($item);
 
     $ig = new Instagram();
-
     try { // connexion
         $ig->login($_ENV[$preEnv . "INSTAGRAM_USERNAME"], $_ENV[$preEnv . "INSTAGRAM_PASSWD"]);
     } catch (\Exception $e) {
