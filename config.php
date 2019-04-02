@@ -19,11 +19,6 @@ $genius = new \Genius\Genius($_ENV['GENIUS_CLIENT_ACCESS_TOKEN']);
 
 $preEnv = isset($_ENV["ENVIRONMENT"]) && $_ENV["ENVIRONMENT"] === "dev" ? "DEV_" : "";
 
-$allow = (object)array(
-    "twitter" => isset($_GET["twitter"]) ? $_GET["twitter"] : true,
-    "instagram" => isset($_GET["instagram"]) ? $_GET["instagram"] : true,
-);
-
 $anneeStart = 1984;
 $anneeEnd = date("Y") - 1;
 $heureStart = 10;

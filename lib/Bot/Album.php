@@ -29,7 +29,7 @@ class Album
 
 	private $name;
 
-	private $type = "album";
+	private $type;// = "album";
 
 	private $release_date;
 

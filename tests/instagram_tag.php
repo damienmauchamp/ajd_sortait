@@ -43,7 +43,7 @@ if ($search->getNumResults()) {
 $mediaId = "2013182025464633099";
 $mediaId = "2013182025464633099_11945724859";
 
-$metadata = array(
+/*$metadata = array(
 	"usertags" => array(
 		"in" => array(
 			array(
@@ -52,9 +52,25 @@ $metadata = array(
 			)
 		)
 	)
-);
+);*/
 
-echo json_encode($ig->media->edit($mediaId, "L'album \"92-2012\" de Kery James sortait il y a 7 ans.\n\n@keryjamesofficial #922012 #KeryJames", $metadata));
+$metadata = 
+    [
+        'usertags' => 
+            [
+                'removed' => [
+                    // '123456789', // Example of removing a user.
+                ],
+                'in'      => [
+                    [
+                        'position' => [0.5, 0.5], // X and Y pos (from 0.0 to 1.0)
+                        'user_id'  => '3907142759', // Must be a numerical UserPK ID.
+                    ]
+                ]
+            ]
+    ];
+
+//echo json_encode($ig->media->edit($mediaId, "L'album \"92-2012\" de Kery James sortait il y a 7 ans.\n\n@keryjamesofficial #922012 #KeryJames", $metadata));
 
 // like : {status: ok} echo json_encode($ig->media->like($mediaId));
 exit;
