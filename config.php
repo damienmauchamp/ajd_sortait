@@ -15,6 +15,8 @@ if (is_file(__DIR__ . '/.env')) {
     $dotenv->load();
 }
 
+$genius = new \Genius\Genius($_ENV['GENIUS_CLIENT_ACCESS_TOKEN']);
+
 $preEnv = isset($_ENV["ENVIRONMENT"]) && $_ENV["ENVIRONMENT"] === "dev" ? "DEV_" : "";
 
 $allow = (object)array(
