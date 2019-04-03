@@ -36,6 +36,10 @@ $img = (object)array(
     'width' => '1800'
 );
 
+function clearAlbum($album) {
+    return $preg_replace("/\s*\(.*((b\.?o\.?)|(bande original)|(best(-|\s)?of)|(vol(ume)?)|((e|é)dition)|(album)|(version)|(bootleg)|(chapitre)|(compil)|(tape)|(attendant)|(digital)|(en route)|(ep)|(hors(-|\s)?)|(live)|(maxi)|(part)|(mix)|(saison)|(sp(e|é)cial)|(cd)|(street)|(ultime)|(deluxe)|(collect)|((e|é)pisode)).*\)/i", "", $album);
+}
+
 function generateHashtags($item)
 {
     return implode(" ", array(
