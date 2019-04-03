@@ -20,7 +20,8 @@ class SearchResource extends AbstractResource
     {
 
     	if (is_array($query)) {
-    		$q = implode(" ", $query);
+    		//$q = implode(" ", $query);
+            $q = preg_replace("/\(.*\)/", "", implode(" ", $query)); // @todo : bricolage, prendre liste des possibilités
     		$artist_name = $query["artist"];
     	} else {
     		$artist_name = $q = $query;
