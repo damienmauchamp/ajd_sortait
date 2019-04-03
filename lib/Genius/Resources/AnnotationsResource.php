@@ -28,7 +28,7 @@ class AnnotationsResource extends AbstractResource
 			if ($dom = $body['dom']) {
 				$prev = false;
 				$results = [];
-				array_walk_recursive($dom, function($value, $key) use (&$prev, &$res){
+				array_walk_recursive($dom, function($value, $key) use (&$prev, &$results){
 					if ($key === "tag" && $value === "img") {
 						$prev = true;
 					} else if ($prev && $key === "src") {

@@ -341,6 +341,8 @@ function instagramPost($item)
 
 function getTodaysAlbums($albums)
 {
+    global $genius;
+
     $todayCount = 0;
     $today = $today_notFound = $thisMonth = array();
     foreach ($albums as $year => $releases) {
@@ -349,6 +351,16 @@ function getTodaysAlbums($albums)
 
                 if ($entity = findOniTunes($album)) {
                     $img = saveImg($entity["artworkUrl100"], $album["artist"] . " " . $album["album"]);
+
+                    if ($img["response"]) {
+                        $album["artwork"] = $img["name"];
+                    }
+
+                    $album["posted"] = false;
+                    $today[$year][] = $album;
+                    $todayCount++;
+                } else if ($entity = $genius->getAnnotationsResource()->getFirstImage($album["annotation_id"])) {
+                    $img = saveImg($entity, $album["artist"] . " " . $album["album"]);
 
                     if ($img["response"]) {
                         $album["artwork"] = $img["name"];

@@ -25,7 +25,9 @@ for ($year = $anneeStart; $year <= $anneeEnd; $year++) {
 
     $url = "https://genius.com/Rap-francais-discographie-$year-lyrics";
 
-    $html = cleanString(get($url, true));
+    //
+
+    $html = cleanString($genius->getSongsResource()->getSongLyrics($url, true));
     $dom = HtmlDomParser::str_get_html($html);
 
     $raw = ""; // for unknown

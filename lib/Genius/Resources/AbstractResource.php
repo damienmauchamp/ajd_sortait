@@ -16,7 +16,7 @@ class AbstractResource
         $this->genius = $genius;
     }
 
-    protected function sendRequest($method, $uri, array $params = []) {
+    protected function sendRequest($method, $uri, array $params = [], $raw_scraping = false) {
         $user_agent = 'Mozilla/5.0 (Windows NT 6.1; rv:8.0) Gecko/20100101 Firefox/8.0';
 
         $options = array(
@@ -38,7 +38,9 @@ class AbstractResource
             CURLOPT_SSL_VERIFYPEER => 0
         );
 
-        $ch = curl_init(self::API_URL . $uri . http_build_query(array_merge(["access_token" => $this->genius->getAccessToken()], $params)));
+        $url = ($raw_scraping ? $uri : self::API_URL . $uri . http_build_query(array_merge(["access_token" => $this->genius->getAccessToken()], $params)));
+
+        $ch = curl_init($url);
         curl_setopt_array($ch, $options);
         $content = curl_exec($ch);
         $err = curl_errno($ch);
@@ -48,7 +50,7 @@ class AbstractResource
 
         $header['errno'] = $err;
         $header['errmsg'] = $errmsg;
-        $header['content'] = strip_tags($content);
+        $header['content'] = $raw_scraping ? trim($content) : strip_tags($content);
         return $header["content"];
     }
 

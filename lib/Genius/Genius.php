@@ -18,7 +18,7 @@ use Http\Message\MessageFactory;*/
  * @method Resources\ArtistsResource getArtistsResource()
  * @//method Resources\ReferentsResource getReferentsResource()
  * @method Resources\SearchResource getSearchResource()
- * @//method Resources\SongsResource getSongsResource()
+ * @method Resources\SongsResource getSongsResource()
  * @//method Resources\WebPagesResource getWebPagesResource()
  */
 
