@@ -32,8 +32,8 @@ $replacements = (object) array(
 
 $array = array(
 	"default" => array(
-		"term" => "XXX",
-		"string" => "XXX",
+		"term" => "Projet",
+		"string" => "Le projet",
 		"actif" => true
 	),
 	"album" => array(
@@ -75,12 +75,6 @@ $array = array(
 		"term" => "Street album",
 		"string" => "Le street album",
 		"regex" => "/street(?:\s+album)?/",
-		"actif" => true
-	),
-	"XXX" => array(
-		"term" => "XXX",
-		"string" => "XXX",
-		"regex" => "XXX",
 		"actif" => true
 	)
 );
