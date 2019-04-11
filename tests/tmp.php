@@ -30,7 +30,7 @@ $replacements = (object) array(
 );
 // \s+\((?<content>[^()]*((?!b\.?o\.?)|(?!bande original)|(?!best(-|\s)?of)|(?!vol(ume)?)|(?!(e|é)dition)|(?!album)|(?!version)|(?!bootleg)|(?!chapitre)|(?!compil)|(?!tape)|(?!attendant)|(?!digital)|(?!en route)|(?!ep)|(?!hors(-|\s)?)|(?!live)|(?!maxi)|(?!part)|(?!mix)|(?!saison)|(?!sp(e|é)cial)|(?!cd)|(?!street)|(?!ultime)|(?!deluxe)|(?!collect)|(?!(e|é)pisode))[^()]*)\)$
 
-$aaaa = array(
+$array = array(
 	"default" => array(
 		"term" => "XXX",
 		"string" => "XXX",
@@ -74,6 +74,7 @@ $aaaa = array(
 	"street_album" => array(
 		"term" => "Street album",
 		"string" => "Le street album",
+		"regex" => "/street(?:\s+album)?/",
 		"actif" => true
 	),
 	"XXX" => array(
@@ -83,6 +84,11 @@ $aaaa = array(
 		"actif" => true
 	)
 );
+
+/*//define('DEFAULT_ROLES', $array);
+const DEFAULT_ROLES = $array;
+
+echo json_encode(DEFAULT_ROLES);exit;*/
 
 /*
 
