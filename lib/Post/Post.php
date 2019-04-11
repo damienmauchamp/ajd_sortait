@@ -15,9 +15,9 @@ class Post {
 
 	protected $hashtags;
 
-	protected $connection;
-
 	public $content;
+
+	protected $connection;
 
     public function __construct(\Bot\Album $album)
     {
@@ -55,11 +55,28 @@ class Post {
 	    return $caption;
 	}
 
-	// hashtags
 	protected function getHashtags() {
-	    return implode(" ", array(
-	        "#" . implode("", array_map('ucfirst', explode(" ", removeNonHashtagCharacters(preg_replace("/ +\((EP|Maxi)\)$/", "", $this->album->getName()))))), // album
-	        "#" . implode("", array_map('ucfirst', explode(" ", removeNonHashtagCharacters($this->album->getArtist(true, false))))) // artist
-	    ));
+		return trim( self::getHashtag($this->album->getArtist(true, false)) . " " . self::getHashtag($this->album->getName(), true) );
+	}
+
+	public static function getHashtag($str, $is_album = false) {
+		$replacements = (object) array(
+			"search" => array(
+				($is_album ? REGEX_ALBUM_BRACKETS : "//"),
+				"/\\$/",
+				"/\€/",
+				REGEX_ONLY_ALPHANUMERIC
+			),
+			"replace" => array(
+				"",
+				"S",
+				"E",
+				""
+			)
+		);
+		$h = preg_replace($replacements->search, $replacements->replace, $str);
+		$h = array_map('ucfirst', explode(" ", strtolower($h)));
+		$h = implode("", $h);
+		return !is_numeric($h) ? "#" . $h : "";
 	}
 }

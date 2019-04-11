@@ -17,6 +17,10 @@ if (is_file(__DIR__ . '/.env')) {
 
 $genius = new \Genius\Genius($_ENV['GENIUS_CLIENT_ACCESS_TOKEN']);
 
+// define
+define('REGEX_ALBUM_BRACKETS', "/\s+\((?<content>[^()]*((?!b\.?o\.?)|(?!bande original)|(?!best(-|\s)?of)|(?!vol(ume)?)|(?!(e|é)dition)|(?!album)|(?!version)|(?!bootleg)|(?!chapitre)|(?!compil)|(?!tape)|(?!attendant)|(?!digital)|(?!en route)|(?!ep)|(?!hors(-|\s)?)|(?!live)|(?!maxi)|(?!part)|(?!mix)|(?!saison)|(?!sp(e|é)cial)|(?!cd)|(?!street)|(?!ultime)|(?!deluxe)|(?!collect)|(?!(e|é)pisode))[^()]*)\)$/mi");
+define('REGEX_ONLY_ALPHANUMERIC', "/(*UTF8)[^\p{L}\p{M}0-9 ]/");
+
 $preEnv = isset($_ENV["ENVIRONMENT"]) && $_ENV["ENVIRONMENT"] === "dev" ? "DEV_" : "";
 
 $anneeStart = 1984;
