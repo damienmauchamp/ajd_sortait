@@ -193,7 +193,6 @@ function setUpPostingDate($today, $todayCount)
 function decimalToHours($decimaltime)
 {
     $hours = floor($decimaltime);
-    $seconds = ($decimaltime * 3600);
     $seconds -= $hours * 3600;
     // calculate minutes left
     $minutes = floor($seconds / 60);
