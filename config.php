@@ -175,7 +175,7 @@ function setUpPostingDate($today, $todayCount)
     $mins = decimalToHours($dec)["mins"];
 
     // initialisation de la date de post (du premier)
-    $date = new DateTime(date('Y-m-d ') . twoDigits($heureStart) . ':00:00');
+    $date = new DateTime(date('Y-m-d ') . twoDigits(HOUR_START) . ':00:00');
 
     foreach ($today as $year => $releases) {
         foreach ($releases as $i => $album) {
