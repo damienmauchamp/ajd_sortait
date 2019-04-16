@@ -183,6 +183,7 @@ function setUpPostingDate($today, $todayCount)
             try {
                 $date->add(new DateInterval('PT' . $mins . 'M'));
             } catch (Exception $e) {
+                //echo $e->getMessage() . " \n ";
             }
         }
     }
@@ -193,7 +194,7 @@ function setUpPostingDate($today, $todayCount)
 function decimalToHours($decimaltime)
 {
     $hours = floor($decimaltime);
-    $seconds -= $hours * 3600;
+    $seconds = ($decimaltime * 3600) - ($hours * 3600);
     // calculate minutes left
     $minutes = floor($seconds / 60);
     // remove those from seconds as well
