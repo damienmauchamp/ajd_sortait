@@ -18,11 +18,11 @@ define('PREFIX_ENVIRONMENT', ENVIRONMENT_IS_DEV ? "DEV_" : "");
 define('PREFIX_ALBUM_FILE', "albums_");
 
 // options
-define('YEAR_START', 1984);
-define('YEAR_END', date("Y") - 1);
-define('HOUR_START', 10);
-define('HOUR_END', 16);
-define('IMG_WIDTH', 1080);
+define('YEAR_START', isset($_ENV["YEAR_START"]) ? intval($_ENV["YEAR_START"]) : 1984);
+define('YEAR_END', isset($_ENV["YEAR_END"]) ? intval($_ENV["YEAR_END"]) : date("Y") - 1);
+define('HOUR_START', isset($_ENV["HOUR_START"]) ? intval($_ENV["HOUR_START"]) : 10);
+define('HOUR_END', isset($_ENV["HOUR_END"]) ? intval($_ENV["HOUR_END"]) : 16);
+define('IMG_WIDTH', isset($_ENV["IMG_WIDTH"]) ? intval($_ENV["IMG_WIDTH"]) : 1080);
 
 // directories
 define('DIR_DATA', __DIR__ . '/data/');
