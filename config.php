@@ -114,31 +114,25 @@ function getTodaysAlbums($albums)
     foreach ($albums as $year => $releases) {
         foreach ($releases as $album) {
             if ($album["date"] === 1 && intval($album["month"]) === intval(date("m")) && intval($album["day"]) === intval(date("d"))) {
+                $entity = $img = false;
 
-                if ($entity = findOniTunes($album)) {
-                    $img = saveImg($entity["artworkUrl100"], $album["artist"] . " " . $album["album"]);
-
-                    if ($img["response"]) {
-                        $album["artwork"] = $img["name"];
-                    }
-
-                    $album["posted"] = false;
-                    $today[$year][] = $album;
-                    $todayCount++;
-                } else if ($entity = $genius->getAnnotationsResource()->getFirstImage($album["annotation_id"])) {
+                // searching for the artwork
+                if ($entity = $genius->getAnnotationsResource()->getFirstImage($album["annotation_id"])) { // trying to get the artwork on Genius
                     $img = saveImg($entity, $album["artist"] . " " . $album["album"]);
-
-                    if ($img["response"]) {
-                        $album["artwork"] = $img["name"];
-                    }
-
-                    $album["posted"] = false;
-                    $today[$year][] = $album;
-                    $todayCount++;
+                } else if ($entity = findOniTunes($album)) { // trying to get the artwork on iTunes
+                    $img = saveImg($entity["artworkUrl100"], $album["artist"] . " " . $album["album"]);
                 } else {
                     $today_notFound[$year][] = $album;
+                    continue;
                 }
 
+                if ($img["response"]) {
+                    $album["artwork"] = $img["name"];
+                }
+                $album["posted"] = false;
+                $today[$year][] = $album;
+                $todayCount++;
+                
             } else if (intval(date("d")) === 1 && intval($album["month"]) === intval(date("m"))) {
                 $thisMonth[$year][] = $album;
             }
