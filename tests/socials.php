@@ -8,8 +8,9 @@ $data = array();
 $id = 0;
 
 //////
-// array example
-$id++;
+// array init
+if (false) {
+$id = -1;
 $data[$id] = (object) array(
 	'id' => $id,
 	'name' => "ARTIST",
@@ -29,12 +30,56 @@ $data[$id] = (object) array(
 		'id' => "ID_TWITTER",
 		'username' => "NAME_TWITTER"
 	),
-	'band' => array(5, 65, 98)|false,
+	'band' => false,
 	'update' => (object) array(
-		'manually' => true|false,
+		'manually' => true,
 		'last_update' => new DateTime()
 	)
 );
+$id = 0;
+$data[$id] = (object) array(
+	'id' => $id,
+	'name' => "ARTIST",
+	'genius' => (object) array(
+		'id' => "ID_GENIUS",
+		'artistName' => "NAME_GENIUS"
+	),
+	'itunes' => (object) array(
+		'id' => "ID_ITUNES",
+		'artistName' => "NAME_ITUNES"
+	),
+	'instagram' => (object) array(
+		'id' => "ID_INSTAGRAM",
+		'username' => "NAME_INSTAGRAM"
+	),
+	'twitter' => (object) array(
+		'id' => "ID_TWITTER",
+		'username' => "NAME_TWITTER"
+	),
+	'band' => false,
+	'update' => (object) array(
+		'manually' => true,
+		'last_update' => new DateTime()
+	)
+);
+writeJSONFile("socials", $data);
+exit;
+}
+
+//////
+// array example
+$id++;
+$data = json_decode(file_get_contents(DIR_DATA . "socials.json"), true);
+
+$albums = json_decode(file_get_contents(DIR_DATA . $file_prefixe . date("Ymd") . ".json"), true);
+foreach ($albums['today'] as $year => $entities) {
+	foreach ($entities as $i => $album) {
+		print_r($album/*['artist']*/);
+	}
+}
+
+writeJSONFile("socials", $data);
+exit;
 
 //echo json_encode($data);
 //var_dump($data);
@@ -44,11 +89,11 @@ $data[$id] = (object) array(
 function get_artist_by_id($id, $source = null) {
 	global $data;
 
+	if (!is_numeric($id) || intval($id) === 0)
+		return false;
+
 	if (!$source)
 		return isset($data[$id]) ? $data[$id] : false;
-
-	if (!is_numeric($id))
-		return false;
 
 	switch ($source) {
 		case 'genius':
@@ -79,7 +124,7 @@ function get_artist_by_name($name, $source = null) {
 	return false;
 }
 
-echo json_encode(get_artist_by_id(1));
+//echo json_encode(get_artist_by_id(1));
 
 
 //////
