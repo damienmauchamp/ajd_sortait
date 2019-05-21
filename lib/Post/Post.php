@@ -39,7 +39,7 @@ class Post {
 
 	    $name = $this->album->getName();
 	    $year = $this->album->getYear();
-	    $artist = $this->album->getArtist(true);
+	    $artist = trim($this->album->getArtist(true));
 
 	    $old = date("Y") - $year;
 
@@ -49,8 +49,10 @@ class Post {
 	        $name = preg_replace("/ +\(EP\)$/", "", $name);
 	    } else if (preg_match("/compilation/", strtolower($name))) {
 	        $caption = "La compilation ";
+	    } else {
+
 	    }
-	    $caption .= "\"${name}\" ${artist}sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
+	    $caption .= "\"${name}\" ${artist} sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
 
 	    return $caption;
 	}
