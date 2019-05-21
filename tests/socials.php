@@ -10,60 +10,60 @@ $id = 0;
 //////
 // array init
 if (false) {
-$id = -1;
-$data[$id] = (object) array(
-	'id' => $id,
-	'name' => "ARTIST",
-	'genius' => (object) array(
-		'id' => "ID_GENIUS",
-		'artistName' => "NAME_GENIUS"
-	),
-	'itunes' => (object) array(
-		'id' => "ID_ITUNES",
-		'artistName' => "NAME_ITUNES"
-	),
-	'instagram' => (object) array(
-		'id' => "ID_INSTAGRAM",
-		'username' => "NAME_INSTAGRAM"
-	),
-	'twitter' => (object) array(
-		'id' => "ID_TWITTER",
-		'username' => "NAME_TWITTER"
-	),
-	'band' => false,
-	'update' => (object) array(
-		'manually' => true,
-		'last_update' => new DateTime()
-	)
-);
-$id = 0;
-$data[$id] = (object) array(
-	'id' => $id,
-	'name' => "ARTIST",
-	'genius' => (object) array(
-		'id' => "ID_GENIUS",
-		'artistName' => "NAME_GENIUS"
-	),
-	'itunes' => (object) array(
-		'id' => "ID_ITUNES",
-		'artistName' => "NAME_ITUNES"
-	),
-	'instagram' => (object) array(
-		'id' => "ID_INSTAGRAM",
-		'username' => "NAME_INSTAGRAM"
-	),
-	'twitter' => (object) array(
-		'id' => "ID_TWITTER",
-		'username' => "NAME_TWITTER"
-	),
-	'band' => false,
-	'update' => (object) array(
-		'manually' => true,
-		'last_update' => new DateTime()
-	)
-);
-writeJSONFile("socials", $data);
-exit;
+	/*$id = -1;
+	$data[$id] = (object) array(
+		'id' => $id,
+		'name' => "ARTIST",
+		'genius' => (object) array(
+			'id' => "ID_GENIUS",
+			'artistName' => "NAME_GENIUS"
+		),
+		'itunes' => (object) array(
+			'id' => "ID_ITUNES",
+			'artistName' => "NAME_ITUNES"
+		),
+		'instagram' => (object) array(
+			'id' => "ID_INSTAGRAM",
+			'username' => "NAME_INSTAGRAM"
+		),
+		'twitter' => (object) array(
+			'id' => "ID_TWITTER",
+			'username' => "NAME_TWITTER"
+		),
+		'band' => false,
+		'updates' => (object) array(
+			'auto' => new DateTime(),
+			'manually' => false
+		)
+	);*/
+	$id = 0;
+	$data[$id] = (object) array(
+		'id' => $id,
+		'name' => "Passi",
+		'genius' => (object) array(
+			'id' => "ID_GENIUS",
+			'artistName' => "Passi"
+		),
+		'itunes' => (object) array(
+			'id' => "15048020",
+			'artistName' => "Passi"
+		),
+		'instagram' => (object) array(
+			'id' => "ID_INSTAGRAM",
+			'username' => "NAME_INSTAGRAM"
+		),
+		'twitter' => (object) array(
+			'id' => "ID_TWITTER",
+			'username' => "NAME_TWITTER"
+		),
+		'band' => false,
+		'updates' => (object) array(
+			'auto' => false,
+			'manually' => false
+		)
+	);
+	writeJSONFile("socials", $data);
+	exit;
 }
 
 //////
