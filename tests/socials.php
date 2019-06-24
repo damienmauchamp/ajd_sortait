@@ -9,7 +9,7 @@ $id = 0;
 
 //////
 // array init
-if (false) {
+if (!is_file(DIR_DATA . "/socials.json")) {
 	/*$id = -1;
 	$data[$id] = (object) array(
 		'id' => $id,
@@ -62,20 +62,68 @@ if (false) {
 			'manually' => false
 		)
 	);
+	var_dump($data);
 	writeJSONFile("socials", $data);
-	exit;
 }
 
 //////
 // array example
 $id++;
+
 $data = json_decode(file_get_contents(DIR_DATA . "socials.json"), true);
+
+function test($cle, $i, $item) {
+	echo json_encode(array(
+		'cle' => $cle,
+		'result' => $i,
+		'item' => $item
+	));
+}
+
+// searching
+$artist = 'Passi';
+
+$i = 0;
+$item = $data[$i];
+
+if ($item['name'] === $artist) {
+	test('name', $i, $item);exit;
+}
+
+if ($item['genius']['artistName'] === $artist) {
+	test('genis', $i, $item);exit;
+}
+
+if ($item['itunes']['artistName'] === $artist) {
+	test('itunes', $i, $item);exit;
+}
+
+if ($item['instagram']['artistName'] === $artist) {
+	test('istagram', $i, $item);exit;
+}
+
+if ($item['twitter']['artistName'] === $artist) {
+	test('twitter', $i, $item);exit;
+}
+
+//band, recall
+
+
+
+echo json_encode($data[0]);
+
+
+
+//echo json_encode($data);
+
+writeJSONFile("socials", $data);
+exit;
 
 $albums = json_decode(file_get_contents(DIR_DATA . $file_prefixe . date("Ymd") . ".json"), true);
 foreach ($albums['today'] as $year => $entities) {
 	foreach ($entities as $i => $album) {
-		print_r($album/*['artist']*/);
-	}
+	print_r($album/*['artist']*/);
+}
 }
 
 writeJSONFile("socials", $data);
@@ -100,14 +148,14 @@ function get_artist_by_id($id, $source = null) {
 		case 'itunes':
 		case 'instagram':
 		case 'twitter':
-			foreach ($data as $artist) {
+		foreach ($data as $artist) {
 				//if (intval($artist->$source->id) === intval($id)) {
-				if ($artist->$source->id === $id) {
-					return $artist;
-				}
+			if ($artist->$source->id === $id) {
+				return $artist;
 			}
+		}
 		default:
-			return false;
+		return false;
 	}
 
 	return false;
@@ -119,9 +167,9 @@ function get_artist_by_name($name, $source = null) {
 			strtolower($artist->genius->artistName) === strtolower($name) || 
 			strtolower($artist->itunes->artistName) === strtolower($name)) {
 			return $artist;
-		}
 	}
-	return false;
+}
+return false;
 }
 
 //echo json_encode(get_artist_by_id(1));

@@ -5,6 +5,6 @@ script/*.json
 desktop.ini
 vendor/
 cookie*
-.idea/*
-.xml
+.idea/
+*.xml
 .env
