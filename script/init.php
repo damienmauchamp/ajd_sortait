@@ -34,7 +34,7 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
     // fetching matches
     foreach ($dom->find('.lyrics') as $element) {
-        $element = str_replace(array('&#8234;'), '', $element);
+        $element = str_replace('‪', '', $element);
         preg_match_all(REGEX_ALBUM_GENIUS_HTML, $element->innertext, $albums_matches, PREG_SET_ORDER, 0);
         $raw .= htmlspecialchars_decode($element->plaintext);
     }
