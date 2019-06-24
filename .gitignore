@@ -3,3 +3,8 @@ img/*
 script/img/*
 script/*.json
 desktop.ini
+vendor/
+cookie*
+.idea/*
+.xml
+.env
