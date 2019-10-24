@@ -139,7 +139,9 @@ function getTodaysAlbums($albums)
         }
     }
 
-    $today = setUpPostingDate($today, $todayCount);
+    if ($todayCount) {
+        $today = setUpPostingDate($today, $todayCount);   
+    }
 
     return array("todayCount" => $todayCount, "today" => $today, "today_notFound" => $today_notFound, "thisMonth" => $thisMonth);
 }
