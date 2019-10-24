@@ -9,7 +9,7 @@ $id = 0;
 
 //////
 // array init
-if (!is_file(DIR_DATA . "/socials.json")) {
+//if (!is_file(DIR_DATA . "/socials.json")) {
 	/*$id = -1;
 	$data[$id] = (object) array(
 		'id' => $id,
@@ -37,7 +37,77 @@ if (!is_file(DIR_DATA . "/socials.json")) {
 		)
 	);*/
 	$id = 0;
+	// 0 psy 4
 	$data[$id] = (object) array(
+		'id' => $id,
+		'name' => "Psy 4 de la Rime",
+		'genius' => (object) array(
+			'id' => 15855,
+			'artistName' => "Psy 4 de la Rime"
+		),
+		'itunes' => (object) array(
+			'id' => 79821216,
+			'artistName' => "Psy 4 de la Rime"
+		),
+		'instagram' => (object) array(
+			'id' => 195181418,
+			'username' => "psy4officiel"
+		),
+		'twitter' => (object) array(
+			'id' => 263769652,
+			'username' => "PSY4OFFICIEL"
+		),
+		'band' => (object) array(
+			'members' => [1, 3, 4, 5],
+			'part_of' => []
+		),
+		'updates' => (object) array(
+			'auto' => false,
+			'manually' => false
+		)
+	);
+
+	// 1 soprano
+	$id = 1;
+	$data[$id] = (object) array(
+		'id' => $id,
+		'name' => "Soprano",
+		'genius' => (object) array(
+			'id' => 1431,
+			'artistName' => "Soprano"
+		),
+		'itunes' => (object) array(
+			'id' => 62797922,
+			'artistName' => "Soprano"
+		),
+		'instagram' => (object) array(
+			'id' => 187728200,
+			'username' => "sopranopsy4"
+		),
+		'twitter' => (object) array(
+			'id' => 128614917,
+			'username' => "sopranopsy4"
+		),
+		'band' => (object) array(
+			'members' => [],
+			'part_of' => [0]
+		),
+		'updates' => (object) array(
+			'auto' => false,
+			'manually' => false
+		)
+	);
+
+	// 2 passi
+
+	// 3 alonzo
+
+	// 4 vincenzo
+
+	// 5 syastyles
+
+
+	/*$data[$id] = (object) array(
 		'id' => $id,
 		'name' => "Passi",
 		'genius' => (object) array(
@@ -61,10 +131,13 @@ if (!is_file(DIR_DATA . "/socials.json")) {
 			'auto' => false,
 			'manually' => false
 		)
-	);
-	var_dump($data);
+	);*/
+
 	writeJSONFile("socials", $data);
-}
+//}
+$data = json_decode(file_get_contents(DIR_DATA . "socials.json"), true);
+exit(json_encode($data));
+
 
 //////
 // array example
@@ -98,19 +171,19 @@ if ($item['itunes']['artistName'] === $artist) {
 	test('itunes', $i, $item);exit;
 }
 
-if ($item['instagram']['artistName'] === $artist) {
+/*if ($item['instagram']['artistName'] === $artist) {
 	test('istagram', $i, $item);exit;
 }
 
 if ($item['twitter']['artistName'] === $artist) {
 	test('twitter', $i, $item);exit;
-}
+}*/
 
 //band, recall
 
 
 
-echo json_encode($data[0]);
+echo json_encode($data);
 
 
 
