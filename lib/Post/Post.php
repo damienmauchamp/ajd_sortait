@@ -22,7 +22,7 @@ class Post {
     public function __construct(\Bot\Album $album)
     {
     	$this->album = $album;
-    	$this->artist_social = $this->getArtistSocial() ? "@" . $this->getArtistSocial() . " " : "";
+    	$this->artist_social = $this->artistSocialsToString($this->getArtistSocial());
     	$this->artwork = $album->getArtwork();
 
     	$this->caption = $this->getCaption();
@@ -31,6 +31,18 @@ class Post {
     	$this->content = $this->caption . "\n\n" . $this->artist_social . $this->hashtags;
 
     	$this->connect();
+    }
+
+    // socials to string
+    protected function artistSocialsToString(mixed $artist_socials) {
+    	if (is_array($artist_socials) {
+    		$socials = '';
+    		foreach ($artist_socials as $social) {
+    			$socials .= ($social ? "@$social " : "");
+    		}
+    		return $socials;
+    	}
+		return $artist_socials ? "@" . $artist_socials . " " : "";
     }
 
 	// caption
