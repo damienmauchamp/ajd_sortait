@@ -34,15 +34,19 @@ class Post {
     }
 
     // socials to string
-    protected function artistSocialsToString(mixed $artist_socials) {
-    	if (is_array($artist_socials) {
+    protected function artistSocialsToString($artist_socials) {
+    	if (!$artist_socials) {
+    		return '';
+    	}
+
+    	if (is_array($artist_socials)) {
     		$socials = '';
     		foreach ($artist_socials as $social) {
-    			$socials .= ($social ? "@$social " : "");
+    			$socials .= ($social && $social !== null ? "@$social " : "");
     		}
     		return $socials;
     	}
-		return $artist_socials ? "@" . $artist_socials . " " : "";
+		return $artist_socials && $artist_socials !== null ? "@" . $artist_socials . " " : "";
     }
 
 	// caption
