@@ -32,10 +32,23 @@ Class InstagramPost extends Post {
 
     	try { // publication
     		$photo = new \InstagramAPI\Media\Photo\InstagramPhoto($this->artwork, ['targetFeed' => \InstagramAPI\Constants::FEED_TIMELINE]);
+        	$this->log(array(
+        		'step' => 1,
+        		'artwork' => $this->artwork,
+        		'metadata' => $metadata
+        	));
+
     		//$media = $this->connection->timeline->uploadPhoto($photo->getFile(), ['caption' => $this->content]);
+        	$this->log(array(
+        		'step' => 2,
+        		'artwork' => $this->artwork,
+        		'metadata' => $metadata
+        	));
+
     		$media = $this->connection->timeline->uploadPhoto($photo->getFile(), $metadata);
 
         	$this->log(array(
+        		'step' => 3,
         		'artwork' => $this->artwork,
         		'metadata' => $metadata
         	));
