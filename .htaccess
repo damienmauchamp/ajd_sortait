@@ -24,6 +24,3 @@ IndexIgnore *.png *.zip *.jpg *.gif *.doc *.txt *.jpg *.json
 	Order allow,deny
 	Deny from all
 </FilesMatch>
-
-img/
-data/
