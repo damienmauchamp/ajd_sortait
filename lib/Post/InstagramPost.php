@@ -34,9 +34,19 @@ Class InstagramPost extends Post {
     		$photo = new \InstagramAPI\Media\Photo\InstagramPhoto($this->artwork, ['targetFeed' => \InstagramAPI\Constants::FEED_TIMELINE]);
     		//$media = $this->connection->timeline->uploadPhoto($photo->getFile(), ['caption' => $this->content]);
     		$media = $this->connection->timeline->uploadPhoto($photo->getFile(), $metadata);
+
+        	$this->log(array(
+        		'artwork' => $this->artwork,
+        		'metadata' => $metadata
+        	));
     	} catch (\Exception $e) {
     		echo 'Something went wrong (2): ' . $e->getMessage() . "\n";
     	}
+
     	return $media ? $media : false;
+    }
+
+    public function log($data = []) {
+        return $this->logging('instagram', $data);
     }
 }

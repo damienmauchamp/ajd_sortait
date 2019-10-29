@@ -97,4 +97,18 @@ class Post {
 		$h = implode("", $h);
 		return !is_numeric($h) ? "#" . $h : "";
 	}
+
+	protected function logging($type, $data = []) {
+		if (in_array($type, ['instagram', 'twitter'])) {
+			require_once __DIR__ . '/../../vendor/autoload.php';
+			$logger = new \Monolog\Logger($type);
+			$logger->pushHandler(new \Monolog\Handler\StreamHandler(__DIR__ . '/../../logs/' . $type . '.log', \Monolog\Logger::INFO));
+
+	        $logger->info("post --> '" . $this->album->getAlbumName() . "' by " . $this->album->getArtistName(), $data ? $data : array(
+	            'artwork' => $this->artwork,
+	            'content' => $this->caption . "\n\n" . $this->artist_social . $this->hashtags
+	        ));
+		}
+        return true;
+	}
 }

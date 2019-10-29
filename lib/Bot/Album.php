@@ -63,10 +63,10 @@ class Album
 				})['id']) +1;
 
 				// creating the instance
-				$data[$id] = (object) array(
+				$data[$id] = array(
 					'id' => $id,
 					'name' => $this->artist,
-					'genius' => (object) array(
+					'genius' => array(
 						'id' => $genius_artist_id,
 						'artistName' => $this->artist
 					),
@@ -74,14 +74,15 @@ class Album
 					'instagram' => null,
 					'twitter' => null,
 					'band' => null,
-					'updates' => (object) array(
-						'auto' => new DateTime(),
+					'updates' => array(
+						'auto' => new \DateTime(),
 						'manually' => false
 					)
 				);
 
 				//
 				if ($artist_socials['twitter']) {
+					print_r($data[$id]);
 					$data[$id]['twitter'] = array(
 						'id' => null,
 						'username' => $artist_socials['twitter']
@@ -276,5 +277,13 @@ class Album
 
 	public function getArtistTwitter() {
 		return $this->getArtistSocial("twitter");
+	}
+
+	public function getAlbumName() {
+		return $this->artist;
+	}
+
+	public function getArtistName() {
+		return $this->artist;
 	}
 }

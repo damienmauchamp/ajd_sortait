@@ -37,8 +37,7 @@ foreach ($results["today"] as $year => $entities) {
 			if (!isPostedTwitter($album)) {
 				echo "posting on twitter...\n";
 				$twitter = new TwitterPost($item);
-				$twitter_logger->info('post', array('item' => $item, 'object' => $twitter));
-				//$twitterRes = $twitter->post();
+				$twitterRes = $twitter->post();
 				$results["today"][$year][$i]["posted"]["twitter"] = true;
 				echo "POSTED!\n";
 			} else {
@@ -47,8 +46,7 @@ foreach ($results["today"] as $year => $entities) {
 			if (!isPostedInstagram($album)) {
 				echo "posting on instagram...\n";
 				$instagram = new InstagramPost($item);
-				$instagram_logger->info('post', array('item' => $item, 'object' => $instagram));
-				//$instagramRes = $instagram->post();
+				$instagramRes = $instagram->post();
 				$results["today"][$year][$i]["posted"]["instagram"] = true;
 				echo "POSTED!\n";
 			} else {

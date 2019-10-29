@@ -22,7 +22,17 @@ use Abraham\TwitterOAuth\TwitterOAuth;
 	        'status' => $this->content,
 	        'media_ids' => implode(',', [$media->media_id_string])
 	    ];
+
+        $this->log(array(
+            'media' => $this->artwork,
+            'parameters' => $parameters
+        ));
+
     	return $this->connection->post('statuses/update', $parameters);
+    }
+
+    public function log($data = []) {
+        return $this->logging('twitter', $data);
     }
 
  }
