@@ -5,6 +5,7 @@ include __DIR__ . '/config.php';
 header("Content-type:text/html");
 
 $date = isset($_GET["date"]) ? date("2019-m-d", strtotime($_GET["date"])) : date("Y-m-d");
+
 ?>
 <script src="http://code.jquery.com/jquery-2.2.4.js"></script>
 <div id="main-get">

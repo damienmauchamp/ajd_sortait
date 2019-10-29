@@ -9,6 +9,20 @@ if (is_file(__DIR__ . '/.env')) {
     $dotenv->load();
 }
 
+// logs
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+// create a logs channels
+$access_logger = new Logger('access');
+$access_logger->pushHandler(new StreamHandler(__DIR__ . '/logs/access.log', Logger::INFO));
+
+$instagram_logger = new Logger('instagram');
+$instagram_logger->pushHandler(new StreamHandler(__DIR__ . '/logs/instagram.log', Logger::INFO));
+
+$twitter_logger = new Logger('twitter');
+$twitter_logger->pushHandler(new StreamHandler(__DIR__ . '/logs/twitter.log', Logger::INFO));
+
 // .env options
 define('ENVIRONMENT', $_ENV["ENVIRONMENT"]);
 define('ENVIRONMENT_IS_DEV', ENVIRONMENT && ENVIRONMENT === "dev");

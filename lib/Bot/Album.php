@@ -2,19 +2,6 @@
 
 namespace Bot;
 
-/*
-artist
-album
-day
-month
-année
-id_annot
-posted { ig, twitter }
-heure post
-artwork
-
-*/
-
 /**
  * Class Album
  * @package Bot
@@ -58,10 +45,9 @@ class Album
 		$genius = new \Genius\Genius($_ENV['GENIUS_CLIENT_ACCESS_TOKEN']);
 		$genius_artist_id = $genius->getSearchResource()->getArtistId(array("album" => strtolower($this->name), "artist" => $this->artist));
 		$artist_socials = $genius->getArtistsResource()->getArtistSocials($genius_artist_id);
-		print_r($artist_socials);
 
-		//$this->name
 		if ($artist_socials !== null) {
+
 			// try to find the artist in the file
 			$search_id = $this->getArtistSocialsFromFile(true);
 
@@ -113,30 +99,28 @@ class Album
 			}
 			// editing the artist
 			else {
-
-				$old_twitter = $data[$id]['twitter'];
-				$old_instagram = $data[$id]['instagram'];
+				$old_twitter = $data[$search_id]['twitter'];
+				$old_instagram = $data[$search_id]['instagram'];
 
 				if ($artist_socials['twitter']) {
-					$data[$id]['twitter'] = array(
+					$data[$search_id]['twitter'] = array(
 						'id' => $old_twitter !== null ? $old_twitter['id'] : null,
 						'username' => $artist_socials['twitter']
 					);
 				}
 
 				if ($artist_socials['instagram']) {
-					$data[$id]['instagram'] = array(
+					$data[$search_id]['instagram'] = array(
 						'id' => $old_instagram !== null ? $old_instagram['id'] : null,
 						'username' => $artist_socials['instagram']
 					);
 				}
 			}
 			writeJSONFile("socials", $data);
-			$this->artist_socials = $artist_socials;
-		} else  {
-			// search in file
-			$this->artist_socials = $this->getArtistSocialsFromFile();
 		}
+
+		// searching socials in file
+		$this->artist_socials = $this->getArtistSocialsFromFile();
 	}
 
 	private function getArtistSocialsFromFile($return_id = false) {
@@ -208,6 +192,7 @@ class Album
 
 			// ['band']['members'] : is a band, fetch members socials
 			if ($res['artist']['band']) {
+
 				//
 				echo "Band found for '" . $this->artist . "'\n";
 				if (!empty($res['artist']['band']['members'])) {
@@ -215,7 +200,7 @@ class Album
 					foreach ($res['artist']['band']['members'] as $member_id) {
 						$member_key = array_search($member_id, array_column($data, 'id'));
 						$member = $data[$member_key];
-						echo "Band member '" . $this->artist . "' --> " . $member['name'] . "\n";
+						echo "Band member: " . $member['name'] . " ($member_id)\n";
 						if ($member['twitter'] !== null && $member['twitter']['username'] !== null) {
 							$return['twitter'][] = $member['twitter']['username'];
 						}
