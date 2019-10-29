@@ -44,6 +44,9 @@ Class InstagramPost extends Post {
         		'artwork' => $this->artwork,
         		'metadata' => $metadata
         	));
+        	$this->log(array(
+        		'connection' => $this->connection
+        	));
 
     		$media = $this->connection->timeline->uploadPhoto($photo->getFile(), $metadata);
 
