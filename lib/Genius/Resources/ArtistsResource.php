@@ -30,7 +30,7 @@ class ArtistsResource extends AbstractResource
 
     		return $artist_socials;
     	} else {
-	    	return false;
+	    	return null;
 	    }
     }
     

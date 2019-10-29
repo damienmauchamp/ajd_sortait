@@ -1,0 +1,29 @@
+# Deny access to .htaccess
+<Files .htaccess>
+	Order allow,deny
+	Deny from all
+</Files>
+
+# Disable directory browsing 
+#Options -Indexes
+
+# Hide the contents of directories
+#IndexIgnore *
+
+# Hide files from listing
+IndexIgnore *.png *.zip *.jpg *.gif *.doc *.txt *.jpg *.json
+
+# Deny access to files with extensions .ini, .psd, .log, .sh
+<FilesMatch "\.(ini|psd|log|sh)$">
+	Order allow,deny
+	Deny from all
+</FilesMatch>
+
+# Deny access to filenames starting with dot(.)
+<FilesMatch "^\.">
+	Order allow,deny
+	Deny from all
+</FilesMatch>
+
+img/
+data/

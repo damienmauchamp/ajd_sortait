@@ -22,7 +22,7 @@ if (intval($results["todayCount"]) === 0) {
 foreach ($results["today"] as $year => $entities) {
 	foreach ($entities as $i => $album) {
 
-		echo $album['album'] . " by " . $album['artist'] . " :\n";
+		echo "'" . $album['album'] . "' by " . $album['artist'] . " :\n";
 
 		if (!isPosted($album) && dateExceeded($album)) { // todo: create methods
 
