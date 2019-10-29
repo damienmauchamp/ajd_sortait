@@ -11,7 +11,7 @@ Class InstagramPost extends Post {
 	}
 
 	protected function connect() {
-		$this->connection = new Instagram();
+		$this->connection = new Instagram($_ENV['ENVIRONMENT'] === 'dev');
 	    try { // connexion
 	    	$this->connection->login($_ENV["INSTAGRAM_USERNAME"], $_ENV["INSTAGRAM_PASSWD"]);
 	    } catch (\Exception $e) {
@@ -21,7 +21,7 @@ Class InstagramPost extends Post {
 	    return true;
 	}
 
-	public function post() {
+	public function post($debug = false) {
 
 		$userId = "";
 
@@ -30,36 +30,29 @@ Class InstagramPost extends Post {
 			//'usertags' => [['position' => [0.5, 0.5], 'user_id' => $userId]]
 		);
 
-    	try { // publication
-    		$photo = new \InstagramAPI\Media\Photo\InstagramPhoto($this->artwork, ['targetFeed' => \InstagramAPI\Constants::FEED_TIMELINE]);
-        	$this->log(array(
-        		'step' => 1,
-        		'artwork' => $this->artwork,
-        		'metadata' => $metadata
-        	));
+        $this->log(array(
+            'debug' => $debug,
+            'artwork' => $this->artwork,
+            'metadata' => $metadata
+        ));
+        
+        $media = null;
+        
+        if (!$debug) {
 
-    		//$media = $this->connection->timeline->uploadPhoto($photo->getFile(), ['caption' => $this->content]);
-        	$this->log(array(
-        		'step' => 2,
-        		'artwork' => $this->artwork,
-        		'metadata' => $metadata
-        	));
-        	$this->log(array(
-        		'connection' => $this->connection
-        	));
+        	try { // publication
+        		$photo = new \InstagramAPI\Media\Photo\InstagramPhoto($this->artwork, ['targetFeed' => \InstagramAPI\Constants::FEED_TIMELINE]);
 
-    		$media = $this->connection->timeline->uploadPhoto($photo->getFile(), $metadata);
+        		//$media = $this->connection->timeline->uploadPhoto($photo->getFile(), ['caption' => $this->content]);
 
-        	$this->log(array(
-        		'step' => 3,
-        		'artwork' => $this->artwork,
-        		'metadata' => $metadata
-        	));
-    	} catch (\Exception $e) {
-    		echo 'Something went wrong (2): ' . $e->getMessage() . "\n";
-    	}
+        		$media = $this->connection->timeline->uploadPhoto($photo->getFile(), $metadata);
 
-    	return $media ? $media : false;
+        	} catch (\Exception $e) {
+        		echo 'Something went wrong (2): ' . $e->getMessage() . "\n";
+        	}
+        }
+
+    	return $media && $media !== null ? $media : false;
     }
 
     public function log($data = []) {

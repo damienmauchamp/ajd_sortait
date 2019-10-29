@@ -14,11 +14,25 @@ $json = file_get_contents(dirname(__DIR__) . "/data/" . $file_prefixe . date("Ym
 $results = json_decode($json, true);
 $res["before"] = $results;
 
+//
+$debug = $_ENV['ENVIRONMENT'] === 'dev';
+
+echo "\n";
 if (intval($results["todayCount"]) === 0) {
-	echo false;
-	exit;
+	echo "===========================================================\n";
+	echo "===========================================================\n";
+	echo ($debug ? "[DEBUG] " : "") . date('Y-m-d H:i:s', strtotime('now')) . " [" . $_ENV['ENVIRONMENT'] . "]\n";
+	echo "Nothing to post.\n";
+	echo "===========================================================\n";
+	echo "===========================================================\n";
+	exit(false);
 }
 
+echo "===========================================================\n";
+echo "===========================================================\n";
+echo ($debug ? "[DEBUG] " : "") . date('Y-m-d H:i:s', strtotime('now')) . " [" . $_ENV['ENVIRONMENT'] . "]\n";
+echo "===========================================================\n";
+echo "===========================================================\n";
 foreach ($results["today"] as $year => $entities) {
 	foreach ($entities as $i => $album) {
 
@@ -34,37 +48,42 @@ foreach ($results["today"] as $year => $entities) {
 				);
 			}
 
-			if (!isPostedTwitter($album)) {
+			if (!isPostedTwitter($results["today"][$year][$i]["posted"])) {
+			//if (!isPostedTwitter($album)) {
 				echo "posting on twitter...\n";
 				$twitter = new TwitterPost($item);
-				$twitterRes = $twitter->post();
+				$twitterRes = $twitter->post($debug);	
 				$results["today"][$year][$i]["posted"]["twitter"] = true;
 				echo "POSTED!\n";
+				writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
 			} else {
 				echo "--> already posted on twitter !\n";
 			}
-			if (!isPostedInstagram($album)) {
+
+			if (!isPostedInstagram($results["today"][$year][$i]["posted"])) {
+			//if (!isPostedInstagram($album)) {
 				echo "posting on instagram...\n";
 				$instagram = new InstagramPost($item);
-				$instagramRes = $instagram->post();
+				$instagramRes = $instagram->post($debug);
 				$results["today"][$year][$i]["posted"]["instagram"] = true;
 				echo "POSTED!\n";
+				writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
 			} else {
 				echo "--> already posted on instagram !\n";
 			}
-			//x->setPosted();
-			//si echec :
-			//	ajouter à "reste" ?
-			// 	poster le reste à la fin de la journée
-			//$results["today"][$year][$i]["posted"] = true;
 
 			//echo $album["album"] . " " . date("Y-m-d H:i:s", $album["post_date"]) . " < " . date("Y-m-d H:i:s", strtotime("now")) . "\n";
+
+			//
 		} else {
 			echo "--> already posted.\n";
 		}
 		continue;
 	}
 }
+echo "===========================================================\n";
+echo "===========================================================\n";
+echo "\n\n";
 
 writeJSONFile($file_prefixe . date("Ymd"), $results);
 $res["after"] = $results;
@@ -74,18 +93,12 @@ function isPosted($album) {
 	return $album["posted"] && isPostedTwitter($album) && isPostedInstagram($album);
 }
 
-function isPostedTwitter($album) {
-	if (!$album["posted"] || !is_array($album)) {
-		return false;
-	}
-	return isset($album["posted"]['twitter']) && $album["posted"]['twitter'];
+function isPostedTwitter($posted) {
+	return isset($posted['twitter']) && $posted['twitter'];
 }
 
-function isPostedInstagram($album) {
-	if (!$album["posted"] || !is_array($album)) {
-		return false;
-	}
-	return isset($album["posted"]['instagram']) && $album["posted"]['instagram'];
+function isPostedInstagram($posted) {
+	return isset($posted['instagram']) && $posted['instagram'];
 }
 
 function dateExceeded($album) {
