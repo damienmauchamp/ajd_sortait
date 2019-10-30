@@ -111,7 +111,7 @@ class Album
 						'username' => $artist_socials['twitter']
 					);
 					$data[$search_id]['twitter'] = $new_twitter;
-					echo "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_twitter) . " => " . json_encode($new_twitter . ")";
+					echo "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_twitter) . " => " . json_encode($new_twitter) . ")";
 				}
 
 				if ($artist_socials['instagram']) {
@@ -120,7 +120,7 @@ class Album
 						'username' => $artist_socials['instagram']
 					);
 					$data[$search_id]['instagram'] = $new_instagram;
-					echo "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_instagram) . " => " . json_encode($new_instagram . ")";
+					echo "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_instagram) . " => " . json_encode($new_instagram) . ")";
 				}
 
 				// LOGS
