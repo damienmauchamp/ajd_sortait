@@ -36,7 +36,7 @@ echo "===========================================================\n";
 foreach ($results["today"] as $year => $entities) {
 	foreach ($entities as $i => $album) {
 
-		echo "'" . $album['album'] . "' by " . $album['artist'] . " :\n";
+		echo logsTime() . "'" . $album['album'] . "' by " . $album['artist'] . " :\n";
 
 		if (!isPosted($album) && dateExceeded($album)) { // todo: create methods
 
@@ -50,35 +50,35 @@ foreach ($results["today"] as $year => $entities) {
 
 			if (!isPostedTwitter($results["today"][$year][$i]["posted"])) {
 			//if (!isPostedTwitter($album)) {
-				echo "posting on twitter...\n";
+				echo logsTime() . "posting on twitter...\n";
 				$twitter = new TwitterPost($item);
 				$twitterRes = $twitter->post($debug);	
 				$results["today"][$year][$i]["posted"]["twitter"] = true;
-				echo "POSTED!\n";
+				echo logsTime() . "POSTED!\n";
 				writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
 			} else {
-				echo "--> already posted on twitter !\n";
+				echo logsTime() . "--> already posted on twitter !\n";
 			}
 
 			if (!isPostedInstagram($results["today"][$year][$i]["posted"])) {
 			//if (!isPostedInstagram($album)) {
-				echo "posting on instagram...\n";
+				echo logsTime() . "posting on instagram...\n";
 				$instagram = new InstagramPost($item);
 				$instagramRes = $instagram->post($debug);
 				$results["today"][$year][$i]["posted"]["instagram"] = true;
-				echo "POSTED!\n";
+				echo logsTime() . "POSTED!\n";
 				writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
 			} else {
-				echo "--> already posted on instagram !\n";
+				echo logsTime() . "--> already posted on instagram !\n";
 			}
 
 			//echo $album["album"] . " " . date("Y-m-d H:i:s", $album["post_date"]) . " < " . date("Y-m-d H:i:s", strtotime("now")) . "\n";
 
 			//
 		} else if (!dateExceeded($album)) {
-			echo "--> post scheduled at " . date('Y-m-d H:i:s', $album["post_date"]) . ".\n";
+			echo logsTime() . "--> post scheduled at " . date('Y-m-d H:i:s', $album["post_date"]) . ".\n";
 		} else {
-			echo "--> already posted.\n";
+			echo logsTime() . "--> already posted.\n";
 		}
 		continue;
 	}
@@ -105,4 +105,8 @@ function isPostedInstagram($posted) {
 
 function dateExceeded($album) {
 	return $album["post_date"] < strtotime("now");
+}
+
+function logsTime() {
+	return "[" . date('H:i:s', strtotime('now')) . "] ";
 }
