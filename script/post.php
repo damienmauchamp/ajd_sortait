@@ -75,6 +75,8 @@ foreach ($results["today"] as $year => $entities) {
 			//echo $album["album"] . " " . date("Y-m-d H:i:s", $album["post_date"]) . " < " . date("Y-m-d H:i:s", strtotime("now")) . "\n";
 
 			//
+		} else if (!dateExceeded($album)) {
+			echo "--> post scheduled at " . date('Y-m-d H:i:s', $album["post_date"]) . ".\n";
 		} else {
 			echo "--> already posted.\n";
 		}
