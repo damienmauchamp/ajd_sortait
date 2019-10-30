@@ -214,7 +214,7 @@ class Album
 					foreach ($res['artist']['band']['members'] as $member_id) {
 
 						$member_key = array_search($member_id, array_column($data, 'id'));
-						$member_key_id = array_keys($data)[$k];
+						$member_key_id = array_keys($data)[$member_key];
 						$member = $data[$member_key_id];
 						echo logsTime() . "[SOCIALS] Band member: " . $member['name'] . " ($member_id)\n";
 						if ($member['twitter'] !== null && $member['twitter']['username'] !== null) {
