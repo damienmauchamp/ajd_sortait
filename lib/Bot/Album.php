@@ -107,7 +107,7 @@ class Album
 				$old_twitter = $data[$search_id]['twitter'];
 				$old_instagram = $data[$search_id]['instagram'];
 
-				echo logsTime() . "[SOCIALS] " . $this->artist . " editing... : " . json_encode($data[$search_id]) . "\n";
+				echo logsTime() . "[SOCIALS] " . $this->artist . " editing... :\n" . json_encode($data[$search_id]) . "\n";
 
 				if ($artist_socials['twitter']) {
 					$new_twitter = array(
