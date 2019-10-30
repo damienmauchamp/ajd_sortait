@@ -212,8 +212,10 @@ class Album
 				if (!empty($res['artist']['band']['members'])) {
 					echo logsTime() . "[SOCIALS] Band members found for '" . $this->artist . "'\n";
 					foreach ($res['artist']['band']['members'] as $member_id) {
+
 						$member_key = array_search($member_id, array_column($data, 'id'));
-						$member = $data[$member_key];
+						$member_key_id = array_keys($data)[$k];
+						$member = $data[$member_key_id];
 						echo logsTime() . "[SOCIALS] Band member: " . $member['name'] . " ($member_id)\n";
 						if ($member['twitter'] !== null && $member['twitter']['username'] !== null) {
 							$return['twitter'][] = $member['twitter']['username'];
