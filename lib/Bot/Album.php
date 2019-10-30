@@ -99,7 +99,7 @@ class Album
 				}
 
 				// LOGS
-				echo logsTime() . "[SOCIALS] " . $this->artist . " added : " . json_encode($data[$id]) . "\n";
+				echo logsTime() . "[SOCIALS] " . $this->artist . " added :\n" . json_encode($data[$id]) . "\n";
 
 			}
 			// editing the artist
@@ -124,11 +124,11 @@ class Album
 						'username' => $artist_socials['instagram']
 					);
 					$data[$search_id]['instagram'] = $new_instagram;
-					echo logsTime() . "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_instagram) . " => " . json_encode($new_instagram) . ")\n";
+					echo logsTime() . "[SOCIALS] " . $this->artist . " instagram edited (" . json_encode($old_instagram) . " => " . json_encode($new_instagram) . ")\n";
 				}
 
 				// LOGS
-				echo logsTime() . "[SOCIALS] " . $this->artist . " edited : " . json_encode($data[$search_id]) . "\n";
+				echo logsTime() . "[SOCIALS] " . $this->artist . " edited :\n" . json_encode($data[$search_id]) . "\n";
 			}
 			writeJSONFile("socials", $data);
 		}
