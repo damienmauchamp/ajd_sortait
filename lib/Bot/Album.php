@@ -82,7 +82,6 @@ class Album
 
 				//
 				if ($artist_socials['twitter']) {
-					print_r($data[$id]);
 					$data[$id]['twitter'] = array(
 						'id' => null,
 						'username' => $artist_socials['twitter']
@@ -97,6 +96,9 @@ class Album
 					);
 				}
 
+				// LOGS
+				echo "[SOCIALS] " . $this->artist . " added+ : " . echo json_encode($data[$id]);
+
 			}
 			// editing the artist
 			else {
@@ -104,18 +106,25 @@ class Album
 				$old_instagram = $data[$search_id]['instagram'];
 
 				if ($artist_socials['twitter']) {
-					$data[$search_id]['twitter'] = array(
+					$new_twitter = array(
 						'id' => $old_twitter !== null ? $old_twitter['id'] : null,
 						'username' => $artist_socials['twitter']
 					);
+					$data[$search_id]['twitter'] = $new_twitter;
+					echo "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_twitter) . " => " . json_encode($new_twitter . ")";
 				}
 
 				if ($artist_socials['instagram']) {
-					$data[$search_id]['instagram'] = array(
+					$new_instagram = array(
 						'id' => $old_instagram !== null ? $old_instagram['id'] : null,
 						'username' => $artist_socials['instagram']
 					);
+					$data[$search_id]['instagram'] = $new_instagram;
+					echo "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_instagram) . " => " . json_encode($new_instagram . ")";
 				}
+
+				// LOGS
+				echo "[SOCIALS] " . $this->artist . " edited~ : " . echo json_encode($data[$id]);
 			}
 			writeJSONFile("socials", $data);
 		}
@@ -195,13 +204,13 @@ class Album
 			if ($res['artist']['band']) {
 
 				//
-				echo "Band found for '" . $this->artist . "'\n";
+				echo "[SOCIALS] Band found for '" . $this->artist . "'\n";
 				if (!empty($res['artist']['band']['members'])) {
-					echo "Band members found for '" . $this->artist . "'\n";
+					echo "[SOCIALS] Band members found for '" . $this->artist . "'\n";
 					foreach ($res['artist']['band']['members'] as $member_id) {
 						$member_key = array_search($member_id, array_column($data, 'id'));
 						$member = $data[$member_key];
-						echo "Band member: " . $member['name'] . " ($member_id)\n";
+						echo "[SOCIALS] Band member: " . $member['name'] . " ($member_id)\n";
 						if ($member['twitter'] !== null && $member['twitter']['username'] !== null) {
 							$return['twitter'][] = $member['twitter']['username'];
 						}
