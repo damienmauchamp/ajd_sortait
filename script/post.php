@@ -57,7 +57,7 @@ foreach ($results["today"] as $year => $entities) {
 				echo logsTime() . "POSTED!\n";
 				writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
 			} else {
-				echo logsTime() . "--> already posted on twitter !\n";
+				echo logsTime() . "\talready posted on twitter !\n";
 			}
 
 			if (!isPostedInstagram($results["today"][$year][$i]["posted"])) {
@@ -69,17 +69,18 @@ foreach ($results["today"] as $year => $entities) {
 				echo logsTime() . "POSTED!\n";
 				writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
 			} else {
-				echo logsTime() . "--> already posted on instagram !\n";
+				echo logsTime() . "\talready posted on instagram !\n";
 			}
 
 			//echo $album["album"] . " " . date("Y-m-d H:i:s", $album["post_date"]) . " < " . date("Y-m-d H:i:s", strtotime("now")) . "\n";
 
 			//
 		} else if (!dateExceeded($album)) {
-			echo logsTime() . "--> post scheduled at " . date('Y-m-d H:i:s', $album["post_date"]) . ".\n";
+			echo logsTime() . "\tpost scheduled at " . date('Y-m-d H:i:s', $album["post_date"]) . ".\n";
 		} else {
-			echo logsTime() . "--> already posted.\n";
+			echo logsTime() . "\talready posted.\n";
 		}
+		echo "\n";
 		continue;
 	}
 }
