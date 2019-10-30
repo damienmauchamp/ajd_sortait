@@ -62,7 +62,7 @@ class Album
 					return @$a['id'] > $b['id'] ? $a : $b;
 				})['id']) +1;
 
-				echo logsTime() . "[SOCIALS] " . $this->artist . " adding...";
+				echo logsTime() . "[SOCIALS] " . $this->artist . " adding...\n";
 
 				// creating the instance
 				$data[$id] = array(
@@ -99,7 +99,7 @@ class Album
 				}
 
 				// LOGS
-				echo logsTime() . "[SOCIALS] " . $this->artist . " added : " . json_encode($data[$id]);
+				echo logsTime() . "[SOCIALS] " . $this->artist . " added : " . json_encode($data[$id]) . "\n";
 
 			}
 			// editing the artist
@@ -107,7 +107,7 @@ class Album
 				$old_twitter = $data[$search_id]['twitter'];
 				$old_instagram = $data[$search_id]['instagram'];
 
-				echo logsTime() . "[SOCIALS] " . $this->artist . " editing... : " . json_encode($data[$search_id]);
+				echo logsTime() . "[SOCIALS] " . $this->artist . " editing... : " . json_encode($data[$search_id]) . "\n";
 
 				if ($artist_socials['twitter']) {
 					$new_twitter = array(
@@ -115,7 +115,7 @@ class Album
 						'username' => $artist_socials['twitter']
 					);
 					$data[$search_id]['twitter'] = $new_twitter;
-					echo logsTime() . "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_twitter) . " => " . json_encode($new_twitter) . ")";
+					echo logsTime() . "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_twitter) . " => " . json_encode($new_twitter) . ")\n";
 				}
 
 				if ($artist_socials['instagram']) {
@@ -124,11 +124,11 @@ class Album
 						'username' => $artist_socials['instagram']
 					);
 					$data[$search_id]['instagram'] = $new_instagram;
-					echo logsTime() . "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_instagram) . " => " . json_encode($new_instagram) . ")";
+					echo logsTime() . "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_instagram) . " => " . json_encode($new_instagram) . ")\n";
 				}
 
 				// LOGS
-				echo logsTime() . "[SOCIALS] " . $this->artist . " edited : " . json_encode($data[$search_id]);
+				echo logsTime() . "[SOCIALS] " . $this->artist . " edited : " . json_encode($data[$search_id]) . "\n";
 			}
 			writeJSONFile("socials", $data);
 		}
