@@ -97,7 +97,7 @@ class Album
 				}
 
 				// LOGS
-				echo "[SOCIALS] " . $this->artist . " added+ : " . echo json_encode($data[$id]);
+				echo "[SOCIALS] " . $this->artist . " added+ : " . json_encode($data[$id]);
 
 			}
 			// editing the artist
@@ -124,7 +124,7 @@ class Album
 				}
 
 				// LOGS
-				echo "[SOCIALS] " . $this->artist . " edited~ : " . echo json_encode($data[$id]);
+				echo "[SOCIALS] " . $this->artist . " edited~ : " . json_encode($data[$id]);
 			}
 			writeJSONFile("socials", $data);
 		}
