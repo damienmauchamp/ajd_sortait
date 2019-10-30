@@ -59,8 +59,10 @@ class Album
 
 				// retrieving the max id
 				$id = intval(array_reduce($data, function ($a, $b) {
-				    return @$a['id'] > $b['id'] ? $a : $b;
+					return @$a['id'] > $b['id'] ? $a : $b;
 				})['id']) +1;
+
+				echo logsTime() . "[SOCIALS] " . $this->artist . " adding...";
 
 				// creating the instance
 				$data[$id] = array(
@@ -97,7 +99,7 @@ class Album
 				}
 
 				// LOGS
-				echo "[SOCIALS] " . $this->artist . " added+ : " . json_encode($data[$id]);
+				echo logsTime() . "[SOCIALS] " . $this->artist . " added : " . json_encode($data[$id]);
 
 			}
 			// editing the artist
@@ -105,13 +107,15 @@ class Album
 				$old_twitter = $data[$search_id]['twitter'];
 				$old_instagram = $data[$search_id]['instagram'];
 
+				echo logsTime() . "[SOCIALS] " . $this->artist . " editing... : " . json_encode($data[$search_id]);
+
 				if ($artist_socials['twitter']) {
 					$new_twitter = array(
 						'id' => $old_twitter !== null ? $old_twitter['id'] : null,
 						'username' => $artist_socials['twitter']
 					);
 					$data[$search_id]['twitter'] = $new_twitter;
-					echo "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_twitter) . " => " . json_encode($new_twitter) . ")";
+					echo logsTime() . "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_twitter) . " => " . json_encode($new_twitter) . ")";
 				}
 
 				if ($artist_socials['instagram']) {
@@ -120,11 +124,11 @@ class Album
 						'username' => $artist_socials['instagram']
 					);
 					$data[$search_id]['instagram'] = $new_instagram;
-					echo "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_instagram) . " => " . json_encode($new_instagram) . ")";
+					echo logsTime() . "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_instagram) . " => " . json_encode($new_instagram) . ")";
 				}
 
 				// LOGS
-				echo "[SOCIALS] " . $this->artist . " edited~ : " . json_encode($data[$search_id]);
+				echo logsTime() . "[SOCIALS] " . $this->artist . " edited : " . json_encode($data[$search_id]);
 			}
 			writeJSONFile("socials", $data);
 		}
@@ -204,13 +208,13 @@ class Album
 			if ($res['artist']['band']) {
 
 				//
-				echo "[SOCIALS] Band found for '" . $this->artist . "'\n";
+				echo logsTime() . "[SOCIALS] Band found for '" . $this->artist . "'\n";
 				if (!empty($res['artist']['band']['members'])) {
-					echo "[SOCIALS] Band members found for '" . $this->artist . "'\n";
+					echo logsTime() . "[SOCIALS] Band members found for '" . $this->artist . "'\n";
 					foreach ($res['artist']['band']['members'] as $member_id) {
 						$member_key = array_search($member_id, array_column($data, 'id'));
 						$member = $data[$member_key];
-						echo "[SOCIALS] Band member: " . $member['name'] . " ($member_id)\n";
+						echo logsTime() . "[SOCIALS] Band member: " . $member['name'] . " ($member_id)\n";
 						if ($member['twitter'] !== null && $member['twitter']['username'] !== null) {
 							$return['twitter'][] = $member['twitter']['username'];
 						}
@@ -235,20 +239,20 @@ class Album
 		if ($caption && !in_array($this->artist, array("Artistes multiples", "Various Artists", "Multi-interprètes"))) {
 			$artist = $this->artist;
 			if ($artist !== '' && $accord) {
-		        if (startsWithVowel($artist)) {
-		            return "d'${artist} ";
-		        } else if (startsWith(strtolower($artist), "les")) {
-		            $artist = preg_replace("/^(l|L)es /", "", $artist);
-		            return "des ${artist} " ;
-		        } else if (startsWith(strtolower($artist), "le")) {
-		            $artist = preg_replace("/^(l|L)e /", "", $artist);
-		            return "du ${artist} " ;
-		        } else {
-		            return "de ${artist} ";
-		        }
-		    } else if (!$accord) {
-		    	return $this->artist;
-		    }
+				if (startsWithVowel($artist)) {
+					return "d'${artist} ";
+				} else if (startsWith(strtolower($artist), "les")) {
+					$artist = preg_replace("/^(l|L)es /", "", $artist);
+					return "des ${artist} " ;
+				} else if (startsWith(strtolower($artist), "le")) {
+					$artist = preg_replace("/^(l|L)e /", "", $artist);
+					return "du ${artist} " ;
+				} else {
+					return "de ${artist} ";
+				}
+			} else if (!$accord) {
+				return $this->artist;
+			}
 			return "";
 		}
 		return $this->artist;

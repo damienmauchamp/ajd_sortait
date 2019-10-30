@@ -106,7 +106,3 @@ function isPostedInstagram($posted) {
 function dateExceeded($album) {
 	return $album["post_date"] < strtotime("now");
 }
-
-function logsTime() {
-	return "[" . date('H:i:s', strtotime('now')) . "] ";
-}

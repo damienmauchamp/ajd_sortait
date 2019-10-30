@@ -280,6 +280,10 @@ function findOniTunes($album)
 function albumStrFix($str) {
     return str_replace(array("Artistes multiples", "Various Artists", "Multi-interprètes", "Compilation", "compilation", "\""), "", str_replace("&amp;", "&", $str));
 }
+
+function logsTime() {
+    return "[" . date('H:i:s', strtotime('now')) . "] ";
+}
 ///////////////////////////////////
 ///////////////////////////////////
 
