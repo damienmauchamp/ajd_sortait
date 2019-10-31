@@ -1,6 +1,6 @@
 <?php
 
-include dirname(__DIR__) . '/config.php';
+include_once dirname(__DIR__) . '/config.php';
 header("Content-type:application/json");
 
 use \InstagramAPI\Instagram;
