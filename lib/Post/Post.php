@@ -102,7 +102,7 @@ class Post {
 		if (in_array($type, ['instagram', 'twitter'])) {
 			require_once __DIR__ . '/../../vendor/autoload.php';
 			$logger = new \Monolog\Logger($type);
-			$logger->pushHandler(new \Monolog\Handler\StreamHandler(__DIR__ . '/../../logs/' . $type . '.log', \Monolog\Logger::INFO));
+			$logger->pushHandler(new \Monolog\Handler\StreamHandler(__DIR__ . '/../../logs/' . $type . '/' . $type . '_' . date('Ymd') . '.log', \Monolog\Logger::INFO));
 
 	        $logger->info("post --> '" . $this->album->getAlbumName() . "' by " . $this->album->getArtistName(), $data ? $data : array(
 	            'artwork' => $this->artwork,
