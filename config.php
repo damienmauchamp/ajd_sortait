@@ -47,7 +47,7 @@ define('DIR_SCRIPT', __DIR__ . '/script/');
 // regular expressions
 define('REGEX_ALBUM_GENIUS', '/^(\*|\-) (?<day>(\d|X){2})\/(?<month>\d{2}) \: (?<artist>.*) (-|–) (?<album>.*)$/m');
 define('REGEX_UNKNOWN_ALBUM_GENIUS', '/^(\*|\-) ((?<day>X{2})\/(?<month>X{2}) \: )?(?<inter>Du (?<iday1>(X|\d){2})\/(?<imonth1>(X|\d){2}) au (?<iday2>(X|\d){2})\/(?<imonth2>(X|\d){2}) :)?(?<artist>[^((X|\d{2})\/(X|\d{2}))].*) (- |– )(?<album>.*)$/m');
-define('REGEX_ALBUM_GENIUS_HTML', '/(?:<(?:a).*?data-id="(?<annotation_id>[^"]*?)".*?>)?(?:\*|\-) (?<day>(?:\d|X){2})\/(?<month>\d{2}) (\:|\-) (?<artist>(?:(?!\s-\s).)*)(?:\s(?:-|–)\s)(?:<i>)?(?<album>(?:(?!<\/?(i|a|br)>).)*)(?:\s*<\/i>\s*)?(?:<\/a>)?/');
+define('REGEX_ALBUM_GENIUS_HTML', '/(?:<(?:a).*?data-id="(?<annotation_id>[^"]*?)".*?>)?(?:\*|\-) (?<day>(?:\d|X){2})\/(?<month>\d{2}) (\:|\-) (?<artist>(?:(?!\s-\s).)*)(?:\s(?:\-|\–|\—)\s)(?:<i>)?(?<album>(?:(?!<\/?(i|a|br)>).)*)(?:\s*<\/i>\s*)?(?:<\/a>)?/');
 define('REGEX_ALBUM_BRACKETS', "/\s+\((?<content>[^()]*((?:b\.?o\.?)|(?:bande original)|(?:best(-|\s)?of)|(?:vol(ume)?)|(?:(e|é)dition)|(?:album)|(?:version)|(?:bootleg)|(?:chapitre)|(?:compil)|(?:tape)|(?:attendant)|(?:digital)|(?:en route)|(?:ep)|(?:hors(-|\s)?)|(?:live)|(?:maxi)|(?:part)|(?:mix)|(?:saison)|(?:sp(e|é)cial)|(?:cd)|(?:street)|(?:ultime)|(?:deluxe)|(?:collect)|(?:(e|é)pisode))[^()]*)\)$/mi");
 define('REGEX_ONLY_ALPHANUMERIC', "/(*UTF8)[^\p{L}\p{M}0-9 ]/");
 
