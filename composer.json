@@ -11,6 +11,12 @@
 		"sunra/php-simple-html-dom-parser": "^1.5",
 		"monolog/monolog": "^2.0"
 	},
+	"scripts": {
+		"bot-init": "php script/init.php",
+		"bot-post": "php script/post.php",
+		"bot-end": "php script/end.php",
+		"bot-socials": "php script/socials.php"
+	},
 	"autoload": {
 		"psr-4": {
 			"Genius\\": "lib/Genius",
