@@ -54,7 +54,7 @@ foreach ($results["today"] as $year => $entities) {
 				$twitter = new TwitterPost($item);
 				$twitterRes = $twitter->post($debug);	
 				$results["today"][$year][$i]["posted"]["twitter"] = $twitterRes; //true;
-				echo logsTime() . "POSTED!\n";
+				echo logsTime() . ($twitterRes ? "POSTED" : "ERROR") . "!\n";
 				writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
 			} else {
 				echo logsTime() . "\talready posted on twitter !\n";
@@ -66,7 +66,7 @@ foreach ($results["today"] as $year => $entities) {
 				$instagram = new InstagramPost($item);
 				$instagramRes = $instagram->post($debug);
 				$results["today"][$year][$i]["posted"]["instagram"] = $instagramRes; //true;
-				echo logsTime() . "POSTED!\n";
+				echo logsTime() . ($instagramRes ? "POSTED" : "ERROR") . "!\n";
 				writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
 			} else {
 				echo logsTime() . "\talready posted on instagram !\n";
