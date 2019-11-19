@@ -53,7 +53,7 @@ foreach ($results["today"] as $year => $entities) {
 				echo logsTime() . "posting on twitter...\n";
 				$twitter = new TwitterPost($item);
 				$twitterRes = $twitter->post($debug);	
-				$results["today"][$year][$i]["posted"]["twitter"] = true;
+				$results["today"][$year][$i]["posted"]["twitter"] = $twitterRes; //true;
 				echo logsTime() . "POSTED!\n";
 				writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
 			} else {
@@ -65,7 +65,7 @@ foreach ($results["today"] as $year => $entities) {
 				echo logsTime() . "posting on instagram...\n";
 				$instagram = new InstagramPost($item);
 				$instagramRes = $instagram->post($debug);
-				$results["today"][$year][$i]["posted"]["instagram"] = true;
+				$results["today"][$year][$i]["posted"]["instagram"] = $instagramRes; //true;
 				echo logsTime() . "POSTED!\n";
 				writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
 			} else {

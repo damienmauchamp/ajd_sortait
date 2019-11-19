@@ -83,6 +83,7 @@ Class InstagramPost extends Post {
 
         	} catch (\Exception $e) {
         		echo 'Something went wrong (2): ' . $e->getMessage() . "\n";
+                return false;
         	}
         }
 
