@@ -11,7 +11,7 @@ Class InstagramPost extends Post {
 	}
 
 	protected function connect() {
-		$this->connection = new Instagram($_ENV['ENVIRONMENT'] === 'dev');
+		$this->connection = new Instagram($_ENV['ENVIRONMENT'] === 'dev' || (isset($_ENV['DEBUG']) && boolval($_ENV['DEBUG'])));
 	    try { // connexion
 	    	$this->connection->login($_ENV["INSTAGRAM_USERNAME"], $_ENV["INSTAGRAM_PASSWD"]);
 	    } catch (\Exception $e) {
