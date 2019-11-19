@@ -75,7 +75,7 @@ Class InstagramPost extends Post {
         
         $media = null;
         
-        if (!$prod) {
+        if ($prod) {
 
         	try { // publication
         		$photo = new \InstagramAPI\Media\Photo\InstagramPhoto($this->artwork, ['targetFeed' => \InstagramAPI\Constants::FEED_TIMELINE]);

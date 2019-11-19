@@ -29,7 +29,7 @@ use Abraham\TwitterOAuth\TwitterOAuth;
             'parameters' => $parameters
         ));
 
-        if (!$prod) {
+        if ($prod) {
     	   return $this->connection->post('statuses/update', $parameters);
         } else {
             return true;
