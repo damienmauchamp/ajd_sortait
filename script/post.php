@@ -15,7 +15,8 @@ $results = json_decode($json, true);
 $res["before"] = $results;
 
 //
-$debug = $_ENV['ENVIRONMENT'] === 'dev' || (isset($_ENV['DEBUG']) && boolval($_ENV['DEBUG']));
+$prod = $_ENV['ENVIRONMENT'] === 'prod' || $_ENV['ENVIRONMENT'] === 'production';
+$debug = isset($_ENV['DEBUG']) && boolval($_ENV['DEBUG']);
 
 echo "\n";
 if (intval($results["todayCount"]) === 0) {
@@ -52,7 +53,7 @@ foreach ($results["today"] as $year => $entities) {
 			//if (!isPostedTwitter($album)) {
 				echo logsTime() . "posting on twitter...\n";
 				$twitter = new TwitterPost($item);
-				$twitterRes = $twitter->post($debug);	
+				$twitterRes = $twitter->post($prod, $debug);	
 				$results["today"][$year][$i]["posted"]["twitter"] = $twitterRes; //true;
 				echo logsTime() . ($twitterRes ? "POSTED" : "ERROR") . "!\n";
 				writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
@@ -64,7 +65,7 @@ foreach ($results["today"] as $year => $entities) {
 			//if (!isPostedInstagram($album)) {
 				echo logsTime() . "posting on instagram...\n";
 				$instagram = new InstagramPost($item);
-				$instagramRes = $instagram->post($debug);
+				$instagramRes = $instagram->post($prod, $debug);
 				$results["today"][$year][$i]["posted"]["instagram"] = $instagramRes; //true;
 				echo logsTime() . ($instagramRes ? "POSTED" : "ERROR") . "!\n";
 				writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);

@@ -21,7 +21,7 @@ Class InstagramPost extends Post {
 	    return true;
 	}
 
-	public function post($debug = false) {
+	public function post($prod, $debug = false) {
 
         $usertags = [];
         $n_tags = 0;
@@ -74,7 +74,7 @@ Class InstagramPost extends Post {
         
         $media = null;
         
-        if (!$debug) {
+        if (!$prod) {
 
         	try { // publication
         		$photo = new \InstagramAPI\Media\Photo\InstagramPhoto($this->artwork, ['targetFeed' => \InstagramAPI\Constants::FEED_TIMELINE]);
@@ -85,6 +85,8 @@ Class InstagramPost extends Post {
         		echo 'Something went wrong (2): ' . $e->getMessage() . "\n";
                 return false;
         	}
+        } else {
+            return true;
         }
 
     	return $media && $media !== null ? $media : false;

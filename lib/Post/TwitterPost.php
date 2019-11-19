@@ -16,7 +16,7 @@ use Abraham\TwitterOAuth\TwitterOAuth;
         return true;
     }
 
-    public function post($debug = false) {
+    public function post($prod, $debug = false) {
     	$media = $this->connection->upload('media/upload', array('media' => $this->artwork));
 	    $parameters = [
 	        'status' => $this->content,
@@ -29,8 +29,10 @@ use Abraham\TwitterOAuth\TwitterOAuth;
             'parameters' => $parameters
         ));
 
-        if (!$debug) {
+        if (!$prod) {
     	   return $this->connection->post('statuses/update', $parameters);
+        } else {
+            return true;
         }
         return false;
     }
