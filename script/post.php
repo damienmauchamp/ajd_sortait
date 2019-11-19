@@ -15,7 +15,7 @@ $results = json_decode($json, true);
 $res["before"] = $results;
 
 //
-$debug = $_ENV['ENVIRONMENT'] === 'dev';
+$debug = $_ENV['ENVIRONMENT'] === 'dev' || (isset($_ENV['debug']) && boolval($_ENV['debug']));
 
 echo "\n";
 if (intval($results["todayCount"]) === 0) {
