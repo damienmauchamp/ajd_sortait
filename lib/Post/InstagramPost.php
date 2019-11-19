@@ -27,7 +27,7 @@ Class InstagramPost extends Post {
         $n_tags = 0;
         $pos_Y = 0.8;
 
-        $ig = new Instagram();
+        $ig = new Instagram($debug);
         try { // need to be logged
             $ig->login($_ENV["INSTAGRAM_USERNAME"], $_ENV["INSTAGRAM_PASSWD"]);
         } catch (\Exception $e) {
@@ -38,12 +38,13 @@ Class InstagramPost extends Post {
         $tags = $this->getArtistSocial();
 
         // setting usertags
-        if ($tags && $ig) {
+        if ($tags/* && $ig*/) {
             $n_tags = count($tags);
             foreach ($tags as $i => $tag) {
                 $this->log(["Searching for @{$tag}'s Instagram ID"]);
                 try {
-                    $id = $ig->people->getUserIdForName($tag);
+                    $id = $this->connection->people->getUserIdForName($tag);
+                    //$id = $ig->people->getUserIdForName($tag);
                     $this->log(["Found Instagram ID '{$id}' for @{$tag}"]);
                     $pos_X = 1 / ($n_tags + 1)  * ($i + 1);
                     $usertags[] = ['position'=>[$pos_X, $pos_Y], 'user_id' => $id];
