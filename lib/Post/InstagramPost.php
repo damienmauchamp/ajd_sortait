@@ -27,12 +27,12 @@ Class InstagramPost extends Post {
         $n_tags = 0;
         $pos_Y = 0.8;
 
-        $ig = new Instagram($debug);
+        /*$ig = new Instagram($debug);
         try { // need to be logged
             $ig->login($_ENV["INSTAGRAM_USERNAME"], $_ENV["INSTAGRAM_PASSWD"]);
         } catch (\Exception $e) {
             echo 'Impossible de se connecter à Instagram: ' . $e->getMessage() . "\n";
-        }
+        }*/
 
         // getting usertags
         $tags = $this->getArtistSocial();
