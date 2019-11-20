@@ -14,7 +14,7 @@ if (is_file(__DIR__ . '/../.env')) {
 /////// CONFIG ///////
 $username = $_ENV['INSTAGRAM_USERNAME'];
 $password = $_ENV['INSTAGRAM_PASSWD'];
-$debug = false;
+$debug = isset($_GET['debug']) ? boolval($_GET['debug']) : false;
 $truncatedDebug = false;
 //////////////////////
 
