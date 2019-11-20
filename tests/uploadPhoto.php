@@ -1,7 +1,5 @@
 <?php
 
-// command line : php -f tests/uploadPhoto.php debug=1
-
 set_time_limit(0);
 date_default_timezone_set('UTC');
 
@@ -16,7 +14,7 @@ if (is_file(__DIR__ . '/../.env')) {
 /////// CONFIG ///////
 $username = $_ENV['INSTAGRAM_USERNAME'];
 $password = $_ENV['INSTAGRAM_PASSWD'];
-$debug = isset($_GET['debug']) ? boolval($_GET['debug']) : false;
+$debug = isset($_ENV['debug']) ? boolval($_ENV['debug']) : false;
 $truncatedDebug = false;
 //////////////////////
 
