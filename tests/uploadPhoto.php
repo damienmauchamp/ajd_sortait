@@ -1,5 +1,7 @@
 <?php
 
+// command line : php -f tests/uploadPhoto.php debug=true
+
 set_time_limit(0);
 date_default_timezone_set('UTC');
 
