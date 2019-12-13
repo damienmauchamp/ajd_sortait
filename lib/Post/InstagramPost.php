@@ -23,6 +23,15 @@ Class InstagramPost extends Post {
 
 	public function post($prod, $debug = false) {
 
+        if (isset($_ENV['POST_ON_INSTAGRAM']) && !boolval($_ENV['POST_ON_INSTAGRAM'])) {
+            $this->log(array(
+                'debug' => $debug,
+                'media' => $this->artwork,
+                'not_posted' => true
+            ));
+            return true;
+        }
+
         $usertags = [];
         $n_tags = 0;
         $pos_Y = 0.8;

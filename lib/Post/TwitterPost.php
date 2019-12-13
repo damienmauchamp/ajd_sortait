@@ -17,6 +17,16 @@ use Abraham\TwitterOAuth\TwitterOAuth;
     }
 
     public function post($prod, $debug = false) {
+
+        if (isset($_ENV['POST_ON_TWITTER']) && !boolval($_ENV['POST_ON_TWITTER'])) {
+            $this->log(array(
+                'debug' => $debug,
+                'media' => $this->artwork,
+                'not_posted' => true
+            ));
+            return true;
+        }
+
     	$media = $this->connection->upload('media/upload', array('media' => $this->artwork));
 	    $parameters = [
 	        'status' => $this->content,
