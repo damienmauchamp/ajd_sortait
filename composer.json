@@ -2,7 +2,7 @@
 	"name": "damienmauchamp/album_fr_bot",
 	"description": "",
 	"require": {
-		"mgp25/instagram-php": "7.0.1",
+		"mgp25/instagram-php": "^7.0",
 		"vlucas/phpdotenv": "^3.3",
 		"abraham/twitteroauth": "^1.0",
       "ext-json": "*",
