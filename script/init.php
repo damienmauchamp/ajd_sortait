@@ -19,8 +19,8 @@ $final = $albums = array();
 for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
     // pages don't exist between 1985-89
-    if (1985 <= $year && $year < 1990)
-        continue;
+    // if (1985 <= $year && $year < 1990)
+    //     continue;
 
     // "song" URL
     $url = "https://genius.com/Rap-francais-discographie-$year-annotated";
@@ -33,25 +33,30 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
     $raw = "";
 
     // fetching matches
-    $albums_matches = [];
+    $albums_matches = $unknown_albums_matches = [];
     // $str = str_replace('‪', '', $dom->innertext);
     // preg_match_all(REGEX_ALBUM_GENIUS_HTML, $str, $albums_matches, PREG_SET_ORDER, 0);
     // $raw = htmlspecialchars_decode($dom->plaintext);
 
     // foreach ($dom->find('.lyrics') as $element) {
+    // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_dom.log", print_r($dom, true));
+    // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_lyrics.log", print_r($dom->find('div.lyrics'), true));
+    // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_lyrics2.log", print_r($dom->find('div[class=lyrics]'), true));
     foreach ($dom->find('body') as $element) {
         $str = str_replace('‪', '', $element->innertext);
         preg_match_all(REGEX_ALBUM_GENIUS_HTML, $str, $albums_matches, PREG_SET_ORDER, 0);
-        $raw .= htmlspecialchars_decode($element->plaintext);
+        // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_albums_matches.log", print_r($albums_matches, true), FILE_APPEND);
+        $raw .= preg_replace('/(About.*$)/', '', htmlspecialchars_decode($element->plaintext));
     }
 
     // creation of an assoc array with the year and the albums matches
     $albums = getAlbumsMatches($albums_matches, $year);
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_albums.log", print_r($albums, true));
-    // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_albums_matches.log", print_r($albums_matches, true));
 
     // fetching all unknown albums
     preg_match_all(REGEX_UNKNOWN_ALBUM_GENIUS, $raw, $unknown_albums_matches, PREG_SET_ORDER, 0);
+    // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_unknown_albums_matches.log", print_r($unknown_albums_matches, true));
+    // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_raw.log", print_r($raw, true));
     // creation of an assoc array with the year and the unknown albums matches
     $unknownAlbums = getAlbumsMatches($unknown_albums_matches, $year);
 
