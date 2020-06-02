@@ -23,11 +23,10 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
         continue;
 
     // "song" URL
-    $url = "https://genius.com/Rap-francais-discographie-$year-lyrics";
+    $url = "https://genius.com/Rap-francais-discographie-$year-annotated";
 
     // scrapping lyrics' html and parsing it
     $html = cleanString($genius->getSongsResource()->getSongLyrics($url, true));
-    file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}.log", $html);
     $dom = HtmlDomParser::str_get_html($html);
 
     // upcoming plaintext for unknown albums
@@ -35,7 +34,12 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
     // fetching matches
     $albums_matches = [];
-    foreach ($dom->find('.lyrics') as $element) {
+    // $str = str_replace('‪', '', $dom->innertext);
+    // preg_match_all(REGEX_ALBUM_GENIUS_HTML, $str, $albums_matches, PREG_SET_ORDER, 0);
+    // $raw = htmlspecialchars_decode($dom->plaintext);
+
+    // foreach ($dom->find('.lyrics') as $element) {
+    foreach ($dom->find('body') as $element) {
         $str = str_replace('‪', '', $element->innertext);
         preg_match_all(REGEX_ALBUM_GENIUS_HTML, $str, $albums_matches, PREG_SET_ORDER, 0);
         $raw .= htmlspecialchars_decode($element->plaintext);
@@ -43,6 +47,8 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
     // creation of an assoc array with the year and the albums matches
     $albums = getAlbumsMatches($albums_matches, $year);
+    // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_albums.log", print_r($albums, true));
+    // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_albums_matches.log", print_r($albums_matches, true));
 
     // fetching all unknown albums
     preg_match_all(REGEX_UNKNOWN_ALBUM_GENIUS, $raw, $unknown_albums_matches, PREG_SET_ORDER, 0);
@@ -51,6 +57,7 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
     // merging arrays for this year
     $final[$year] = array_merge(isset($albums[$year]) ? $albums[$year] : array(), isset($unknownAlbums[$year]) ? $unknownAlbums[$year] : array());
+    // break;
 }
 
 $today = getTodaysAlbums($final);
