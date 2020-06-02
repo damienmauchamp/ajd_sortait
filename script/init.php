@@ -33,6 +33,7 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
     $raw = "";
 
     // fetching matches
+    $albums_matches = [];
     foreach ($dom->find('.lyrics') as $element) {
         $str = str_replace('‪', '', $element->innertext);
         preg_match_all(REGEX_ALBUM_GENIUS_HTML, $str, $albums_matches, PREG_SET_ORDER, 0);
