@@ -27,7 +27,7 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
     // scrapping lyrics' html and parsing it
     $html = cleanString($genius->getSongsResource()->getSongLyrics($url, true));
-    file_put_contents(dirname(__DIR__ . '/logs/genius_' . date('Ymd') . "_{$year}.log", $html));
+    file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}.log", $html);
     $dom = HtmlDomParser::str_get_html($html);
 
     // upcoming plaintext for unknown albums
