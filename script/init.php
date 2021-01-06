@@ -54,9 +54,16 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
         print_r(strlen($str) . "\n");
 
-        $tmp = explode('head>', $str);
+        // $tmp = explode('head>', $str);
+        // print_r('c:' . count($tmp) . "\n");
+        // $str = count($tmp) > 2 ? $tmp[2] : $tmp[0];
+
+
+        $tmp = explode('class="lyrics', $str);
         print_r('c:' . count($tmp) . "\n");
-        $str = count($tmp) > 2 ? $tmp[2] : $tmp[0];
+        $str = count($tmp) > 1 ? $tmp[1] : $tmp[0];
+
+
         print_r(strlen($str) . "\n");
 
         preg_match_all(REGEX_ALBUM_GENIUS_HTML, $str, $albums_matches, PREG_SET_ORDER, 0);
