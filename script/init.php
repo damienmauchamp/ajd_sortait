@@ -47,10 +47,17 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_dom.log", print_r($dom, true));
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_lyrics.log", print_r($dom->find('div.lyrics'), true));
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_lyrics2.log", print_r($dom->find('div[class=lyrics]'), true));
-    // foreach ($dom->find('body') as $element) {
-    foreach ($dom->find('.song_body') as $element) {
-        // print_r($element);
+    foreach ($dom->find('body') as $element) {
+    // foreach ($dom->find('.lyrics') as $element) {
+        print_r(strlen($element->innertext) . "\n");
         $str = str_replace('‪', '', $element->innertext);
+
+        print_r(strlen($str) . "\n");
+
+        $tmp = explode('</head>', $str);
+        $str = count($tmp) > 1 ? $tmp[1] : $tmp[0];
+        print_r(strlen($str) . "\n");
+
         preg_match_all(REGEX_ALBUM_GENIUS_HTML, $str, $albums_matches, PREG_SET_ORDER, 0);
         // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_albums_matches.log", print_r($albums_matches, true), FILE_APPEND);
         $raw .= preg_replace('/(About.*$)/', '', htmlspecialchars_decode($element->plaintext));
