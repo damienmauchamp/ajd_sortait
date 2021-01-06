@@ -55,7 +55,8 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
         // print_r( $element);
         $str = str_replace('‪', '', $element->innertext);
 
-        echo $str . "\n";
+        print_r('strlen($str):' . strlen($str) . "\n");
+        print_r('$str:' . $str . "\n");
 
         // print_r(strlen($str) . "\n");
 
