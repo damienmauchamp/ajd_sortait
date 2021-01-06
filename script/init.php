@@ -65,7 +65,16 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
     // foreach ($dom->find('body') as $element) {
     // foreach ($dom->find('html') as $element) {
     // foreach ($dom->find('div[class=lyrics]') as $element) {
-    foreach ($dom->find('.lyrics') as $element) {
+
+    $elements = $dom->find('.lyrics');
+    if (!$elements) {
+        $elements = $dom->find('div[class=lyrics]', 0);
+        if (!$elements) {
+            $elements = $dom->find('body');
+        }
+    }
+
+    foreach ($elements as $element) {
         // print_r(strlen($element->innertext) . "\n");
         // print_r( $element);
         $str = str_replace('‪', '', $element->innertext);
