@@ -19,11 +19,10 @@ $final = $albums = array();
 // loop fetching every albums
 for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
-    if (!in_array($year, ['1990'])) {
-        continue;
-        // (?:[^;\/]+\s*(\*|\-))
-    }
-    echo "$year\n";
+    // if (!in_array($year, ['1990'])) {
+    //     continue;
+    // }
+    // echo "$year\n";
 
     // pages don't exist between 1985-89
     // if (1985 <= $year && $year < 1990)
@@ -34,21 +33,21 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
     // scrapping lyrics' html and parsing it
     $html = cleanString($genius->getSongsResource()->getSongLyrics($url, true));
-        print_r('strlen($html):' . strlen($html) . "\n");
+        // print_r('strlen($html):' . strlen($html) . "\n");
     $dom = HtmlDomParser::str_get_html($html);
 
-    print_r('$dom');
-    echo "\n";
-    print_r(gettype($dom));
-    echo "\n\n";
+    // print_r('$dom');
+    // echo "\n";
+    // print_r(gettype($dom));
+    // echo "\n\n";
 
-    print_r('$dom->find(div[class=lyrics])');
-    echo "\n";
-    print_r(gettype($dom->find('div[class=lyrics]')));
-    print_r(gettype($dom->find('div[class=lyrics]', 0)));
-    echo "\n";
-    print_r(count($dom->find('div[class=lyrics]')));
-    echo "\n\n";
+    // print_r('$dom->find(div[class=lyrics])');
+    // echo "\n";
+    // print_r(gettype($dom->find('div[class=lyrics]')));
+    // print_r(gettype($dom->find('div[class=lyrics]', 0)));
+    // echo "\n";
+    // print_r(count($dom->find('div[class=lyrics]')));
+    // echo "\n\n";
 
     // upcoming plaintext for unknown albums
     $raw = "";
@@ -79,8 +78,8 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
         // print_r( $element);
         $str = str_replace('‪', '', $element->innertext);
 
-        print_r('strlen($str):' . strlen($str) . "\n");
-        print_r('$str:' . $str . "\n");
+        // print_r('strlen($str):' . strlen($str) . "\n");
+        // print_r('$str:' . $str . "\n");
 
         // print_r(strlen($str) . "\n");
 
@@ -88,14 +87,12 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
         // print_r('c:' . count($tmp) . "\n");
         // $str = count($tmp) > 2 ? $tmp[2] : $tmp[0];
 
-
         $tmp = explode('<body', $str);
-        print_r('c:' . count($tmp) . "\n");
+        // print_r('c:' . count($tmp) . "\n");
         $str = count($tmp) > 1 ? $tmp[1] : $tmp[0];
 
-
         $tmp = explode('__PRELOADED_STATE__', $str);
-        print_r('c:' . count($tmp) . "\n");
+        // print_r('c:' . count($tmp) . "\n");
         $str = $tmp[0];
 
 
@@ -108,8 +105,8 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
     // creation of an assoc array with the year and the albums matches
     $albums = getAlbumsMatches($albums_matches, $year);
-    print_r($albums);
-    exit();
+    // print_r($albums);
+    // exit();
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_albums.log", print_r($albums, true));
 
     // fetching all unknown albums
