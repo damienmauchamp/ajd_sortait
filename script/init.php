@@ -59,7 +59,7 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
         // $str = count($tmp) > 2 ? $tmp[2] : $tmp[0];
 
 
-        $tmp = explode('class="lyrics', $str);
+        $tmp = explode('<body', $str);
         print_r('c:' . count($tmp) . "\n");
         $str = count($tmp) > 1 ? $tmp[1] : $tmp[0];
 
