@@ -54,9 +54,9 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
         // print_r(strlen($str) . "\n");
 
-        $tmp = explode('head>', $str);
-        print_r('c:' . count($tmp) . "\n");
-        $str = count($tmp) > 2 ? $tmp[2] : $tmp[0];
+        // $tmp = explode('head>', $str);
+        // print_r('c:' . count($tmp) . "\n");
+        // $str = count($tmp) > 2 ? $tmp[2] : $tmp[0];
 
 
         // $tmp = explode('<body', $str);
