@@ -18,6 +18,12 @@ $final = $albums = array();
 // loop fetching every albums
 for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
+    // if (!in_array($year, ['1990'])) {
+    //     continue;
+    //     // (?:[^;\/]+\s*(\*|\-))
+    // }
+    // echo "$year\n";
+
     // pages don't exist between 1985-89
     // if (1985 <= $year && $year < 1990)
     //     continue;
@@ -38,11 +44,11 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
     // preg_match_all(REGEX_ALBUM_GENIUS_HTML, $str, $albums_matches, PREG_SET_ORDER, 0);
     // $raw = htmlspecialchars_decode($dom->plaintext);
 
-    // foreach ($dom->find('.lyrics') as $element) {
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_dom.log", print_r($dom, true));
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_lyrics.log", print_r($dom->find('div.lyrics'), true));
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_lyrics2.log", print_r($dom->find('div[class=lyrics]'), true));
-    foreach ($dom->find('body') as $element) {
+    // foreach ($dom->find('body') as $element) {
+    foreach ($dom->find('.lyrics') as $element) {
         $str = str_replace('‪', '', $element->innertext);
         preg_match_all(REGEX_ALBUM_GENIUS_HTML, $str, $albums_matches, PREG_SET_ORDER, 0);
         // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_albums_matches.log", print_r($albums_matches, true), FILE_APPEND);
@@ -51,6 +57,7 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
     // creation of an assoc array with the year and the albums matches
     $albums = getAlbumsMatches($albums_matches, $year);
+    // print_r($albums);
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_albums.log", print_r($albums, true));
 
     // fetching all unknown albums
