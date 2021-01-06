@@ -59,9 +59,14 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
         // $str = count($tmp) > 2 ? $tmp[2] : $tmp[0];
 
 
-        $tmp = explode('<body', $str);
+        // $tmp = explode('<body', $str);
+        // print_r('c:' . count($tmp) . "\n");
+        // $str = count($tmp) > 1 ? $tmp[1] : $tmp[0];
+
+
+        $tmp = explode('</lyrics', $str);
         print_r('c:' . count($tmp) . "\n");
-        $str = count($tmp) > 1 ? $tmp[1] : $tmp[0];
+        $str = $tmp[0];
 
 
         print_r(strlen($str) . "\n");
