@@ -11,7 +11,7 @@ define('MAX_FILE_SIZE', 60000000);
 
 // dependencies
 // use Sunra\PhpSimple\HtmlDomParser;
-use KubAT\PhpSimple\HtmlDomParser;
+use \KubAT\PhpSimple\HtmlDomParser;
 
 // instances initiation
 $final = $albums = array();
@@ -34,6 +34,7 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
     // scrapping lyrics' html and parsing it
     $html = cleanString($genius->getSongsResource()->getSongLyrics($url, true));
+        print_r('strlen($html):' . strlen($html) . "\n");
     $dom = HtmlDomParser::str_get_html($html);
 
     // upcoming plaintext for unknown albums
