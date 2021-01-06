@@ -9,7 +9,8 @@
 		"ext-curl": "*",
 		"nategood/httpful": "^0.2.20",
 		"sunra/php-simple-html-dom-parser": "^1.5",
-		"monolog/monolog": "^2.0"
+		"monolog/monolog": "^2.0",
+		"kub-at/php-simple-html-dom-parser": "^1.9"
 	},
 	"scripts": {
 		"bot-init": "php script/init.php",

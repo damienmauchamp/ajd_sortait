@@ -10,7 +10,8 @@ include dirname(__DIR__) . '/config.php';
 define('MAX_FILE_SIZE', 60000000);
 
 // dependencies
-use Sunra\PhpSimple\HtmlDomParser;
+// use Sunra\PhpSimple\HtmlDomParser;
+use KubAT\PhpSimple\HtmlDomParser;
 
 // instances initiation
 $final = $albums = array();
