@@ -112,7 +112,7 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
     // fetching all unknown albums
     preg_match_all(REGEX_UNKNOWN_ALBUM_GENIUS, $raw, $unknown_albums_matches, PREG_SET_ORDER, 0);
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_unknown_albums_matches.log", print_r($unknown_albums_matches, true));
-    // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_raw.log", print_r($raw, true));
+    file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_raw.log", print_r($raw, true));
     // creation of an assoc array with the year and the unknown albums matches
     $unknownAlbums = getAlbumsMatches($unknown_albums_matches, $year);
 
