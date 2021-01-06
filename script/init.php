@@ -37,6 +37,19 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
         print_r('strlen($html):' . strlen($html) . "\n");
     $dom = HtmlDomParser::str_get_html($html);
 
+    print_r('$dom');
+    echo "\n";
+    print_r(gettype($dom));
+    echo "\n\n";
+
+    print_r('$dom->find(div[class=lyrics])');
+    echo "\n";
+    print_r(gettype($dom->find('div[class=lyrics]')));
+    print_r(gettype($dom->find('div[class=lyrics]', 0)));
+    echo "\n";
+    print_r(count($dom->find('div[class=lyrics]')));
+    echo "\n\n";
+
     // upcoming plaintext for unknown albums
     $raw = "";
 
@@ -50,8 +63,8 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_lyrics.log", print_r($dom->find('div.lyrics'), true));
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_lyrics2.log", print_r($dom->find('div[class=lyrics]'), true));
     // foreach ($dom->find('html') as $element) {
-    // foreach ($dom->find('div[class=lyrics]') as $element) {
-    foreach ($dom->find('.lyrics') as $element) {
+    foreach ($dom->find('div[class=lyrics]') as $element) {
+    // foreach ($dom->find('.lyrics') as $element) {
         // print_r(strlen($element->innertext) . "\n");
         // print_r( $element);
         $str = str_replace('‪', '', $element->innertext);
