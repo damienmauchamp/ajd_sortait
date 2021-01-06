@@ -47,9 +47,11 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_dom.log", print_r($dom, true));
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_lyrics.log", print_r($dom->find('div.lyrics'), true));
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_lyrics2.log", print_r($dom->find('div[class=lyrics]'), true));
-    foreach ($dom->find('html') as $element) {
+    // foreach ($dom->find('html') as $element) {
+    foreach ($dom->find('div[class=lyrics]') as $element) {
     // foreach ($dom->find('.lyrics') as $element) {
         // print_r(strlen($element->innertext) . "\n");
+        // print_r( $element);
         $str = str_replace('‪', '', $element->innertext);
 
         // echo $str . "\n";
@@ -66,9 +68,9 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
         // $str = count($tmp) > 1 ? $tmp[1] : $tmp[0];
 
 
-        $tmp = explode('window.__PRELOADED_STATE__', $str);
-        print_r('c:' . count($tmp) . "\n");
-        $str = $tmp[0];
+        // $tmp = explode('window.__PRELOADED_STATE__', $str);
+        // print_r('c:' . count($tmp) . "\n");
+        // $str = $tmp[0];
 
 
         // print_r(strlen($str) . "\n");
