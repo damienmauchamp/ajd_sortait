@@ -86,6 +86,7 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
     // creation of an assoc array with the year and the albums matches
     $albums = getAlbumsMatches($albums_matches, $year);
     print_r($albums);
+    exit();
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_albums.log", print_r($albums, true));
 
     // fetching all unknown albums
