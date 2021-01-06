@@ -52,6 +52,8 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
         // print_r(strlen($element->innertext) . "\n");
         $str = str_replace('‪', '', $element->innertext);
 
+        // echo $str . "\n";
+
         // print_r(strlen($str) . "\n");
 
         // $tmp = explode('head>', $str);
@@ -64,9 +66,9 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
         // $str = count($tmp) > 1 ? $tmp[1] : $tmp[0];
 
 
-        // $tmp = explode('</lyrics', $str);
-        // print_r('c:' . count($tmp) . "\n");
-        // $str = $tmp[0];
+        $tmp = explode('window.__PRELOADED_STATE__', $str);
+        print_r('c:' . count($tmp) . "\n");
+        $str = $tmp[0];
 
 
         // print_r(strlen($str) . "\n");
