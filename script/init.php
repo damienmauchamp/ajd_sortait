@@ -18,11 +18,11 @@ $final = $albums = array();
 // loop fetching every albums
 for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
-    // if (!in_array($year, ['1990'])) {
-    //     continue;
-    //     // (?:[^;\/]+\s*(\*|\-))
-    // }
-    // echo "$year\n";
+    if (!in_array($year, ['1990'])) {
+        continue;
+        // (?:[^;\/]+\s*(\*|\-))
+    }
+    echo "$year\n";
 
     // pages don't exist between 1985-89
     // if (1985 <= $year && $year < 1990)
@@ -57,7 +57,7 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
 
     // creation of an assoc array with the year and the albums matches
     $albums = getAlbumsMatches($albums_matches, $year);
-    // print_r($albums);
+    print_r($albums);
     // file_put_contents(dirname(__DIR__) . '/logs/genius_' . date('Ymd') . "_{$year}_albums.log", print_r($albums, true));
 
     // fetching all unknown albums
