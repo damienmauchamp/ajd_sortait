@@ -29,7 +29,7 @@ for ($year = YEAR_START ; $year <= YEAR_END ; $year++) {
     //     continue;
 
     // "song" URL
-    $url = "https://genius.com/Rap-francais-discographie-$year-annotated?react=0";
+    $url = "https://genius.com/Rap-francais-discographie-$year-annotated?react=1";
 
     // scrapping lyrics' html and parsing it
     $html = cleanString($genius->getSongsResource()->getSongLyrics($url, true));
