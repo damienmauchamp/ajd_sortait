@@ -11,6 +11,7 @@ if (is_file(__DIR__ . '/.env')) {
 
 // logs
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 // create a logs channels
 $access_logger = new Logger('access');
@@ -61,7 +62,6 @@ header("Content-type:application/json");
 ini_set('max_execution_time', 0);
 
 // dependencies
-use Monolog\Logger;
 use \InstagramAPI\Instagram;
 
 // allows you to upload an instagram post via the browser
