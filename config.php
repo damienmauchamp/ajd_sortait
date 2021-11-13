@@ -100,8 +100,8 @@ function getAlbumsMatches($matches, $year) {
 					"day" => $item["iday2"] !== "XX" ? $item["iday2"] : "",
 					"month" => $item["imonth2"] !== "XX" ? $item["imonth2"] : "",
 				],
-				"artist" => trim($item["artist"]),
-				"album" => trim($item["album"]),
+				"artist" => trim(htmlspecialchars_decode($item["artist"])),
+				"album" => trim(htmlspecialchars_decode($item["album"])),
 			];
 		} else {
 			$entities[$year][] = [
