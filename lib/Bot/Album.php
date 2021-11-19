@@ -28,8 +28,8 @@ class Album {
 	private $annotation_id;
 
 	public function __construct(array $item) {
-		$this->artist = str_replace('#x27;', '\'', $item["artist"]);
-		$this->name = str_replace('#x27;', '\'', $item["album"]);
+		$this->artist = str_replace('&#x27;', '\'', $item["artist"]);
+		$this->name = str_replace('&#x27;', '\'', $item["album"]);
 		//$this->type = $item["type"];
 		$this->release_date = new \DateTime("${item['year']}-${item['month']}-${item['day']}");
 		$this->posted = $item["posted"];
@@ -141,7 +141,7 @@ class Album {
 		$return = [
 			"facebook" => [],
 			"twitter" => [],
-			"instagram" => []
+			"instagram" => [],
 		];
 
 		if (!is_file(DIR_DATA . "socials.json")) {
