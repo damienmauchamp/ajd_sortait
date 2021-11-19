@@ -84,6 +84,10 @@ function cleanString($string) {
 
 // create an assoc array with albums
 function getAlbumsMatches($matches, $year) {
+
+	$search = ['&#x27;'];
+	$replace = ['\''];
+
 	$entities = [];
 	foreach ($matches as $item) {
 		if (isset($item["iday1"]) || isset($item["imonth1"]) || isset($item["iday2"]) || isset($item["imonth2"])) {
@@ -100,8 +104,8 @@ function getAlbumsMatches($matches, $year) {
 					"day" => $item["iday2"] !== "XX" ? $item["iday2"] : "",
 					"month" => $item["imonth2"] !== "XX" ? $item["imonth2"] : "",
 				],
-				"artist" => trim(htmlspecialchars_decode($item["artist"])),
-				"album" => trim(htmlspecialchars_decode($item["album"])),
+				"artist" => str_replace($search, $replace, trim(htmlspecialchars_decode($item["artist"]))),
+				"album" => str_replace($search, $replace, trim(htmlspecialchars_decode($item["album"]))),
 			];
 		} else {
 			$entities[$year][] = [
@@ -109,8 +113,8 @@ function getAlbumsMatches($matches, $year) {
 				"day" => $item["day"] !== "XX" ? $item["day"] : "",
 				"month" => $item["month"],
 				"year" => $year,
-				"artist" => trim(strip_tags(html_entity_decode($item["artist"]))),
-				"album" => trim(strip_tags(html_entity_decode($item["album"]))),
+				"artist" => str_replace($search, $replace, trim(strip_tags(html_entity_decode($item["artist"])))),
+				"album" => str_replace($search, $replace, trim(strip_tags(html_entity_decode($item["album"])))),
 				// genius
 				"annotation_id" => isset($item["annotation_id"]) ? $item["annotation_id"] : null,
 				//"db" => "('".addslashes($item["artist"])."', '".addslashes($item["album"])."', '" . $year . "-" . $item["month"] . "-" . $item["day"] . "'),"
