@@ -102,17 +102,18 @@ class Post {
 			$name = preg_replace("/ +\(EP\)$/", "", $name);
 			$captions = array_merge($captions, $captions_type);
 		}
-		else if(preg_match("/compilation/", strtolower($name))) {
+		else if(preg_match("/compilation/", strtolower($name)) && !preg_match("/(artist|multi)/", strtolower($artist))) {
 			$type = "La compilation ";
 			$captions = array_merge($captions, $captions_type, $captions_compilations);
 		}
 
 		// not plural artists
-		if($artist && !strstr($artist, "artistes multiples") &&
-			!strstr($artist, "multi-interprètes") &&
-			!strstr($artist, "various artists") &&
-			!strstr($artist, " les ") &&
-			!strstr($artist, "&")) {
+		$test = trim($this->album->getArtist(false,));
+		if($artist && !strstr($test, "artistes multiples") &&
+			!strstr($test, "multi-interprètes") &&
+			!strstr($test, "various artists") &&
+			!strstr($test, " les ") &&
+			!strstr($test, "&")) {
 			$captions = array_merge($captions, $captions_singulier);
 		} else if( !$artist ||
 			strstr(mb_strtolower($artist), "artistes multiples") &&
@@ -136,11 +137,20 @@ class Post {
 //				$caption = str_replace(" de {{artist}}", "", $caption);
 				$caption = preg_replace('/^{{artist}}/ ', '', $caption);
 			}
+		} else {
+			$artist = trim($this->album->getArtist(true,false));
+			if (in_array(mb_strtolower($artist), ["artistes multiples", "various artists", "multi-interprètes"])) {
+				$artist = '';
+				foreach ($captions as &$caption) {
+					$caption = str_replace(" de {{artist}}", "", $caption);
+					$caption = preg_replace('/^{{artist}}/ ', '', $caption);
+				}
+			}
 		}
-		return trim(str_replace(
+		return preg_replace('/de\s+(sortait|fête)/', '', trim(str_replace(
 			['{{years}}', '{{artist}}', '{{album}}', '{{type}}', '{{type_m}}', '{{suffixe}}'],
 			[$old, $artist, $name, $type, mb_strtolower($type), $suffixe],
-			$captions[rand(0, count($captions) - 1)]));
+			$captions[rand(0, count($captions) - 1)])));
 	}
 
 	protected function getHashtags() {
