@@ -128,7 +128,7 @@ class Post {
 
 		$template = $captions[rand(0, count($captions) - 1)];
 		if (startsWith($template, '{{artist}}')) {
-			$artist = trim($this->album->getArtist());
+			$artist = trim($this->album->getArtist(false, true));
 			if (in_array(mb_strtolower($artist), ["artistes multiples", "various artists", "multi-interprètes"])) {
 				$artist = '';
 			}
