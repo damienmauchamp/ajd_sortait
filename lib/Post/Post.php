@@ -108,22 +108,35 @@ class Post {
 		}
 
 		// not plural artists
-		if(!strstr($artist, "artistes multiples") &&
+		if($artist && !strstr($artist, "artistes multiples") &&
 			!strstr($artist, "multi-interprètes") &&
 			!strstr($artist, "various artists") &&
 			!strstr($artist, " les ") &&
 			!strstr($artist, "&")) {
 			$captions = array_merge($captions, $captions_singulier);
-		} else if(strstr(mb_strtolower($artist), "artistes multiples") &&
-			!strstr(mb_strtolower($artist), "multi-interprètes") &&
-			!strstr(mb_strtolower($artist), "various artists")) {
+		} else if( !$artist ||
+			strstr(mb_strtolower($artist), "artistes multiples") &&
+			strstr(mb_strtolower($artist), "multi-interprètes") &&
+			strstr(mb_strtolower($artist), "various artists")) {
 			foreach ($captions as &$caption) {
 				$caption = str_replace(" de {{artist}}", "", $caption);
+				$caption = preg_replace('/^{{artist}}/ ', '', $caption);
 			}
 		}
 
 		$suffixe = 'an'.($old > 1 ? 's' : '');
 
+		$template = $captions[rand(0, count($captions) - 1)];
+		if (startsWith($template, '{{artist}}')) {
+			$artist = trim($this->album->getArtist());
+			if (in_array(mb_strtolower($artist), ["artistes multiples", "various artists", "multi-interprètes"])) {
+				$artist = '';
+			}
+			foreach ($captions as &$caption) {
+//				$caption = str_replace(" de {{artist}}", "", $caption);
+				$caption = preg_replace('/^{{artist}}/ ', '', $caption);
+			}
+		}
 		return trim(str_replace(
 			['{{years}}', '{{artist}}', '{{album}}', '{{type}}', '{{type_m}}', '{{suffixe}}'],
 			[$old, $artist, $name, $type, mb_strtolower($type), $suffixe],
