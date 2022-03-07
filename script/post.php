@@ -6,12 +6,12 @@ include dirname(__DIR__) . '/config.php';
 //header("Content-type:text/html");
 
 use \Bot\Album;
-use \Bot\Post\TwitterPost;
 use \Bot\Post\InstagramPost;
+use \Bot\Post\TwitterPost;
 
 $instagram_off = true;
 
-$res = array();
+$res = [];
 $json = file_get_contents(dirname(__DIR__) . "/data/" . ($file_prefixe ?? '') . date("Ymd") . ".json");
 $results = json_decode($json, true);
 $res["before"] = $results;
@@ -41,21 +41,24 @@ foreach ($results["today"] as $year => $entities) {
 
 		echo logsTime() . "'" . $album['album'] . "' by " . $album['artist'] . " :\n";
 
-		if (!isPosted($album) && dateExceeded($album)) { // todo: create methods
+		if (!isPosted($album) && dateExceeded($album)) {
+			// todo: create methods
 
 			$item = new Album($album);
 			if (!is_array($results["today"][$year][$i]["posted"])) {
-				$results["today"][$year][$i]["posted"] = array(
+				$results["today"][$year][$i]["posted"] = [
 					'twitter' => false,
-					'instagram' => false
-				);
+					'instagram' => false,
+				];
 			}
 
-			if (!isPostedTwitter($results["today"][$year][$i]["posted"])) {
-			//if (!isPostedTwitter($album)) {
+			if (!$item->getArtwork()) {
+				echo logsTime() . "\tno artwork found.\n";
+			} elseif (!isPostedTwitter($results["today"][$year][$i]["posted"])) {
+				//if (!isPostedTwitter($album)) {
 				echo logsTime() . "posting on twitter...\n";
 				$twitter = new TwitterPost($item);
-				$twitterRes = $twitter->post($prod, $debug);	
+				$twitterRes = $twitter->post($prod, $debug);
 				$results["today"][$year][$i]["posted"]["twitter"] = $twitterRes; //true;
 				echo logsTime() . ($twitterRes ? "POSTED" : "ERROR") . "!\n";
 				writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
@@ -63,9 +66,9 @@ foreach ($results["today"] as $year => $entities) {
 				echo logsTime() . "\talready posted on twitter !\n";
 			}
 //
-//			if (!$instagram_off) {
+//			if (false && !$instagram_off) {
 //				if (!isPostedInstagram($results["today"][$year][$i]["posted"])) {
-//				//if (!isPostedInstagram($album)) {
+//					//if (!isPostedInstagram($album)) {
 //					echo logsTime() . "posting on instagram...\n";
 //					$instagram = new InstagramPost($item);
 //					$instagramRes = $instagram->post($prod, $debug);

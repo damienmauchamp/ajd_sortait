@@ -8,15 +8,14 @@ namespace Bot;
  *
  */
 
-class Album
-{
+class Album {
 	private $artist;
 
 	private $artist_socials;
 
 	private $name;
 
-	private $type;// = "album";
+	private $type; // = "album";
 
 	private $release_date;
 
@@ -29,13 +28,13 @@ class Album
 	private $annotation_id;
 
 	public function __construct(array $item) {
-		$this->artist = $item["artist"];
-		$this->name = $item["album"];
+		$this->artist = str_replace('&#x27;', '\'', $item["artist"]);
+		$this->name = str_replace('&#x27;', '\'', $item["album"]);
 		//$this->type = $item["type"];
 		$this->release_date = new \DateTime("${item['year']}-${item['month']}-${item['day']}");
 		$this->posted = $item["posted"];
 		$this->post_date = $item["post_date"];
-		$this->artwork =  dirname(dirname(__DIR__)) . $item["artwork"];
+		$this->artwork = dirname(dirname(__DIR__)) . $item["artwork"];
 		$this->annotation_id = $item["annotation_id"];
 
 		$this->findArtistSocials();
@@ -43,7 +42,7 @@ class Album
 
 	public function findArtistSocials() {
 		$genius = new \Genius\Genius($_ENV['GENIUS_CLIENT_ACCESS_TOKEN']);
-		$genius_artist_id = $genius->getSearchResource()->getArtistId(array("album" => strtolower($this->name), "artist" => $this->artist));
+		$genius_artist_id = $genius->getSearchResource()->getArtistId(["album" => strtolower($this->name), "artist" => $this->artist]);
 		$artist_socials = $genius->getArtistsResource()->getArtistSocials($genius_artist_id);
 
 		if ($artist_socials !== null) {
@@ -60,42 +59,42 @@ class Album
 				// retrieving the max id
 				$id = intval(array_reduce($data, function ($a, $b) {
 					return @$a['id'] > $b['id'] ? $a : $b;
-				})['id']) +1;
+				})['id']) + 1;
 
 				echo logsTime() . "[SOCIALS] " . $this->artist . " adding...\n";
 
 				// creating the instance
-				$data[$id] = array(
+				$data[$id] = [
 					'id' => $id,
 					'name' => $this->artist,
-					'genius' => array(
+					'genius' => [
 						'id' => $genius_artist_id,
-						'artistName' => $this->artist
-					),
+						'artistName' => $this->artist,
+					],
 					'itunes' => null,
 					'instagram' => null,
 					'twitter' => null,
 					'band' => null,
-					'updates' => array(
+					'updates' => [
 						'auto' => new \DateTime(),
-						'manually' => false
-					)
-				);
+						'manually' => false,
+					],
+				];
 
 				//
 				if ($artist_socials['twitter']) {
-					$data[$id]['twitter'] = array(
+					$data[$id]['twitter'] = [
 						'id' => null,
-						'username' => $artist_socials['twitter']
-					);
+						'username' => $artist_socials['twitter'],
+					];
 				}
 
 				//
 				if ($artist_socials['instagram']) {
-					$data[$id]['instagram'] = array(
+					$data[$id]['instagram'] = [
 						'id' => null,
-						'username' => $artist_socials['instagram']
-					);
+						'username' => $artist_socials['instagram'],
+					];
 				}
 
 				// LOGS
@@ -110,19 +109,19 @@ class Album
 				echo logsTime() . "[SOCIALS] " . $this->artist . " editing... :\n" . json_encode($data[$search_id]) . "\n";
 
 				if ($artist_socials['twitter']) {
-					$new_twitter = array(
+					$new_twitter = [
 						'id' => $old_twitter !== null ? $old_twitter['id'] : null,
-						'username' => $artist_socials['twitter']
-					);
+						'username' => $artist_socials['twitter'],
+					];
 					$data[$search_id]['twitter'] = $new_twitter;
 					echo logsTime() . "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_twitter) . " => " . json_encode($new_twitter) . ")\n";
 				}
 
 				if ($artist_socials['instagram']) {
-					$new_instagram = array(
+					$new_instagram = [
 						'id' => $old_instagram !== null ? $old_instagram['id'] : null,
-						'username' => $artist_socials['instagram']
-					);
+						'username' => $artist_socials['instagram'],
+					];
 					$data[$search_id]['instagram'] = $new_instagram;
 					echo logsTime() . "[SOCIALS] " . $this->artist . " instagram edited (" . json_encode($old_instagram) . " => " . json_encode($new_instagram) . ")\n";
 				}
@@ -139,14 +138,15 @@ class Album
 
 	private function getArtistSocialsFromFile($return_id = false) {
 
-		$return = array(
+		$return = [
 			"facebook" => [],
 			"twitter" => [],
-			"instagram" => []
-		);
+			"instagram" => [],
+		];
 
 		if (!is_file(DIR_DATA . "socials.json")) {
 			writeJSONFile("socials", []);
+
 			return $return;
 		}
 
@@ -161,31 +161,31 @@ class Album
 
 			// by artist name
 			if ($artist['name'] == $this->artist) {
-				$res = array(
+				$res = [
 					'source' => 'name',
 					'id' => $id,
-					'artist' => $artist
-				);
+					'artist' => $artist,
+				];
 				break;
 			}
 
 			// by genius name
 			else if ($artist['genius'] !== null && $artist['genius']['artistName'] == $this->artist) {
-				$res = array(
+				$res = [
 					'source' => 'genius',
 					'id' => $id,
-					'artist' => $artist
-				);
+					'artist' => $artist,
+				];
 				break;
 			}
 
 			// by itunes name
 			else if ($artist['itunes'] !== null && $artist['itunes']['artistName'] == $this->artist) {
-				$res = array(
+				$res = [
 					'source' => 'itunes',
 					'id' => $id,
-					'artist' => $artist
-				);
+					'artist' => $artist,
+				];
 				break;
 			}
 		}
@@ -227,6 +227,7 @@ class Album
 				}
 			}
 			// ['band']['part_of'] : is part of a band, search band socials
+
 			return $return;
 		}
 
@@ -238,25 +239,29 @@ class Album
 	}
 
 	public function getArtist($caption = false, $accord = true) {
-		if ($caption && !in_array($this->artist, array("Artistes multiples", "Various Artists", "Multi-interprètes"))) {
+		if ($caption && !in_array($this->artist, ["Artistes multiples", "Various Artists", "Multi-interprètes"])) {
 			$artist = $this->artist;
 			if ($artist !== '' && $accord) {
 				if (startsWithVowel($artist)) {
 					return "d'${artist} ";
 				} else if (startsWith(strtolower($artist), "les")) {
 					$artist = preg_replace("/^(l|L)es /", "", $artist);
-					return "des ${artist} " ;
+
+					return "des ${artist} ";
 				} else if (startsWith(strtolower($artist), "le")) {
 					$artist = preg_replace("/^(l|L)e /", "", $artist);
-					return "du ${artist} " ;
+
+					return "du ${artist} ";
 				} else {
 					return "de ${artist} ";
 				}
 			} else if (!$accord) {
 				return $this->artist;
 			}
+
 			return "";
 		}
+
 		return $this->artist;
 	}
 
