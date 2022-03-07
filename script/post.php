@@ -12,7 +12,7 @@ use \Bot\Post\InstagramPost;
 $instagram_off = true;
 
 $res = array();
-$json = file_get_contents(dirname(__DIR__) . "/data/" . $file_prefixe . date("Ymd") . ".json");
+$json = file_get_contents(dirname(__DIR__) . "/data/" . ($file_prefixe ?? '') . date("Ymd") . ".json");
 $results = json_decode($json, true);
 $res["before"] = $results;
 
@@ -62,20 +62,20 @@ foreach ($results["today"] as $year => $entities) {
 			} else {
 				echo logsTime() . "\talready posted on twitter !\n";
 			}
-
-			if (!$instagram_off) {
-				if (!isPostedInstagram($results["today"][$year][$i]["posted"])) {
-				//if (!isPostedInstagram($album)) {
-					echo logsTime() . "posting on instagram...\n";
-					$instagram = new InstagramPost($item);
-					$instagramRes = $instagram->post($prod, $debug);
-					$results["today"][$year][$i]["posted"]["instagram"] = $instagramRes; //true;
-					echo logsTime() . ($instagramRes ? "POSTED" : "ERROR") . "!\n";
-					writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
-				} else {
-					echo logsTime() . "\talready posted on instagram !\n";
-				}
-			}
+//
+//			if (!$instagram_off) {
+//				if (!isPostedInstagram($results["today"][$year][$i]["posted"])) {
+//				//if (!isPostedInstagram($album)) {
+//					echo logsTime() . "posting on instagram...\n";
+//					$instagram = new InstagramPost($item);
+//					$instagramRes = $instagram->post($prod, $debug);
+//					$results["today"][$year][$i]["posted"]["instagram"] = $instagramRes; //true;
+//					echo logsTime() . ($instagramRes ? "POSTED" : "ERROR") . "!\n";
+//					writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
+//				} else {
+//					echo logsTime() . "\talready posted on instagram !\n";
+//				}
+//			}
 
 			//echo $album["album"] . " " . date("Y-m-d H:i:s", $album["post_date"]) . " < " . date("Y-m-d H:i:s", strtotime("now")) . "\n";
 

@@ -41,10 +41,8 @@ use Abraham\TwitterOAuth\TwitterOAuth;
 
         if ($prod) {
     	   return $this->connection->post('statuses/update', $parameters) ? true : false;
-        } else {
-            return true;
         }
-        return false;
+		return true;
     }
 
     public function log($data = []) {

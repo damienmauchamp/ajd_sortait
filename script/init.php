@@ -6,6 +6,8 @@
 // includes
 include dirname(__DIR__) . '/config.php';
 
+global $genius;
+
 // redefine max file size
 define('MAX_FILE_SIZE', 60000000);
 
@@ -125,4 +127,7 @@ $today = getTodaysAlbums($final);
 
 writeJSONFile("albums", $final);
 writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $today);
-echo json_encode($today);
+echo json_encode([
+    'today' => $today,
+    'final' => $final,
+]);

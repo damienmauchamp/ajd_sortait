@@ -1,6 +1,7 @@
 data/*
 img/*
 logs/*
+script/tests*
 script/img/*
 script/*.json
 desktop.ini

@@ -56,21 +56,72 @@ class Post {
 	    $name = $this->album->getName();
 	    $year = $this->album->getYear();
 	    $artist = trim($this->album->getArtist(true));
-
 	    $old = date("Y") - $year;
 
-	    $caption = "L'album ";
-	    if (preg_match($regexEP, $name)) {
-	        $caption = "L'EP ";
-	        $name = preg_replace("/ +\(EP\)$/", "", $name);
-	    } else if (preg_match("/compilation/", strtolower($name))) {
-	        $caption = "La compilation ";
-	    } else {
+//	    $caption = "L'album ";
+//	    if (preg_match($regexEP, $name)) {
+//	        $caption = "L'EP ";
+//	        $name = preg_replace("/ +\(EP\)$/", "", $name);
+//	    } else if (preg_match("/compilation/", strtolower($name))) {
+//	        $caption = "La compilation ";
+//	    } else {
+//
+//	    }
+//	    $caption .= "\"${name}\" ${artist} sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
+//		return $caption;
+		// v2
+		$captions = [
+			'"{{album}}" de {{artist}} sortait il y a {{years}} {{suffixe}}.',
+			'"{{album}}" de {{artist}} fête ses {{years}} {{suffixe}}.',
+			'"{{album}}" de {{artist}} fête ses {{years}} {{suffixe}} aujourd\'hui.',
+			'"{{album}}" de {{artist}} fête aujourd\'hui ses {{years}} {{suffixe}}.',
+		];
+		$captions_singulier = [
+			'{{artist}} sortait son projet "{{album}}" il y a {{years}} {{suffixe}}.',
+			'{{artist}} nous révélait son projet "{{album}}" il y a {{years}} {{suffixe}}.',
+			'{{artist}} révélait "{{album}}" il y a {{years}} {{suffixe}}.',
+		];
+		$captions_celebration = [
+		];
+		$captions_compilations = [
+			'Le projet "{{album}}" fête ses {{years}} {{suffixe}}.',
+			'Le projet "{{album}}" a {{years}} {{suffixe}} aujourd\'hui.',
+			'Le projet "{{album}}" fête ses {{years}} {{suffixe}} aujourd\'hui.',
+		];
+		$captions_type = [
+			'{{type}}"{{album}}" de {{artist}} fête ses {{years}} {{suffixe}} aujourd\'hui.',
+			'{{type}}"{{album}}" de {{artist}} fête ses {{years}} {{suffixe}}.',
+			'{{artist}} sortait {{type_m}} "{{album}}" il y a {{years}} {{suffixe}}.',
+			'{{artist}} sortait {{type_m}} "{{album}}" il y a {{years}} {{suffixe}} aujourd\'hui.',
+		];
 
-	    }
-	    $caption .= "\"${name}\" ${artist} sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
+		// Type
+		$type = '';
+		if(preg_match($regexEP, $name)) {
+			$type = "L'EP ";
+			$name = preg_replace("/ +\(EP\)$/", "", $name);
+			$captions = array_merge($captions, $captions_type);
+		}
+		else if(preg_match("/compilation/", strtolower($name))) {
+			$type = "La compilation ";
+			$captions = array_merge($captions, $captions_type, $captions_compilations);
+		}
 
-	    return $caption;
+		// not plural artists
+		if(!strstr($artist, "artistes multiples") &&
+			!strstr($artist, "multi-interprètes") &&
+			!strstr($artist, "various artists") &&
+			!strstr($artist, " les ") &&
+			!strstr($artist, "&")) {
+			$captions = array_merge($captions, $captions_singulier);
+		}
+
+		$suffixe = 'an'.($old > 1 ? 's' : '');
+
+		return trim(str_replace(
+			['{{years}}', '{{artist}}', '{{album}}', '{{type}}', '{{type_m}}', '{{suffixe}}'],
+			[$old, $artist, $name, $type, mb_strtolower($type), $suffixe],
+			$captions[rand(0, count($captions) - 1)]));
 	}
 
 	protected function getHashtags() {
