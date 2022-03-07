@@ -114,6 +114,12 @@ class Post {
 			!strstr($artist, " les ") &&
 			!strstr($artist, "&")) {
 			$captions = array_merge($captions, $captions_singulier);
+		} else if(strstr(mb_strtolower($artist), "artistes multiples") &&
+			!strstr(mb_strtolower($artist), "multi-interprètes") &&
+			!strstr(mb_strtolower($artist), "various artists")) {
+			foreach ($captions as &$caption) {
+				$caption = str_replace(" de {{artist}}", "", $caption);
+			}
 		}
 
 		$suffixe = 'an'.($old > 1 ? 's' : '');
@@ -125,7 +131,9 @@ class Post {
 	}
 
 	protected function getHashtags() {
-		return trim( self::getHashtag($this->album->getArtist(true, false)) . " " . self::getHashtag($this->album->getName(), true) );
+		$artistHashtag = self::getHashtag($this->album->getArtist(true, false));
+		$albumHashtag = self::getHashtag($this->album->getName(), true);
+		return  trim(($artistHashtag !== '#' ? $artistHashtag : '').($albumHashtag !== '#' ? $albumHashtag : ''));
 	}
 
 	public static function getHashtag($str, $is_album = false) {
