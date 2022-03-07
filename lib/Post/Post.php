@@ -97,7 +97,7 @@ class Post {
 
 		// Type
 		$type = '';
-		if(preg_match($regexEP, $name)) {
+		if(preg_match($regexEP, $name)&& !preg_match("/(artist|multi)/", strtolower($artist))) {
 			$type = "L'EP ";
 			$name = preg_replace("/ +\(EP\)$/", "", $name);
 			$captions = array_merge($captions, $captions_type);
@@ -114,7 +114,7 @@ class Post {
 			!strstr($test, "various artists") &&
 			!strstr($test, " les ") &&
 			!strstr($test, "&")) {
-			$captions = array_merge($captions, $captions_singulier);
+//			$captions = array_merge($captions, $captions_singulier);
 		} else if( !$artist ||
 			strstr(mb_strtolower($artist), "artistes multiples") &&
 			strstr(mb_strtolower($artist), "multi-interprètes") &&
