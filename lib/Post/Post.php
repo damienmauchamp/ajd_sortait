@@ -156,7 +156,7 @@ class Post {
 	protected function getHashtags() {
 		$artistHashtag = self::getHashtag($this->album->getArtist(true, false));
 		$albumHashtag = self::getHashtag($this->album->getName(), true);
-		return  trim(($artistHashtag !== '#' ? $artistHashtag : '').($albumHashtag !== '#' ? $albumHashtag : ''));
+		return  trim(($artistHashtag !== '#' ? $artistHashtag : '').' '.($albumHashtag !== '#' ? $albumHashtag : ''));
 	}
 
 	public static function getHashtag($str, $is_album = false) {
