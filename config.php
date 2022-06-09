@@ -137,8 +137,21 @@ function getTodaysAlbums($albums) {
 			if($album["date"] === 1 && intval($album["month"]) === intval(date("m")) && intval($album["day"]) === intval(date("d"))) {
 				$entity = $img = false;
 
+				// todo exceptions
+				$exceptions = json_decode('[{"annotation_id": "13541296", "artwork": "https://t2.genius.com/unsafe/852x0/https%3A%2F%2Fimages.genius.com%2F703580020e9e40ea47107ab52dd6c956.1000x1000x1.jpg", "name": "21/03/2018 : Usky - Porte dorée (Saison 1)"} ]');
+				$exception_artwork = null;
+				foreach ($exceptions as $exception) {
+					if ($exception['annotation_id'] === $album["annotation_id"]) {
+						$exception_artwork = $exception['artwork'];
+					}
+				}
+
+				if ($exception_artwork) {
+					// If there's a specific Genius album using a specific artwork
+					$img = saveImg($exception_artwork, $album["artist"]." ".$album["album"]);
+				}
 				// searching for the artwork
-				if($entity = $genius->getAnnotationsResource()->getFirstImage($album["annotation_id"])) {
+				else if($entity = $genius->getAnnotationsResource()->getFirstImage($album["annotation_id"])) {
 					// trying to get the artwork on Genius
 					$img = saveImg($entity, $album["artist"]." ".$album["album"]);
 				}
