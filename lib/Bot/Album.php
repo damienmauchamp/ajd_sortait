@@ -28,13 +28,16 @@ class Album {
 	private $annotation_id;
 
 	public function __construct(array $item) {
+
+		$item["artwork"] = $item["artwork"] ?? null;
+
 		$this->artist = str_replace('&#x27;', '\'', $item["artist"]);
 		$this->name = str_replace('&#x27;', '\'', $item["album"]);
 		//$this->type = $item["type"];
 		$this->release_date = new \DateTime("${item['year']}-${item['month']}-${item['day']}");
 		$this->posted = $item["posted"];
 		$this->post_date = $item["post_date"];
-		$this->artwork = dirname(dirname(__DIR__)) . $item["artwork"];
+		$this->artwork = $item["artwork"] ? dirname(dirname(__DIR__)) . $item["artwork"] : null;
 		$this->annotation_id = $item["annotation_id"];
 
 		$this->findArtistSocials();
@@ -61,7 +64,7 @@ class Album {
 					return @$a['id'] > $b['id'] ? $a : $b;
 				})['id']) + 1;
 
-				echo logsTime() . "[SOCIALS] " . $this->artist . " adding...\n";
+				echo logsTime() . "[SOCIALS] {$this->artist} ➕ adding...\n\n";
 
 				// creating the instance
 				$data[$id] = [
@@ -98,15 +101,14 @@ class Album {
 				}
 
 				// LOGS
-				echo logsTime() . "[SOCIALS] " . $this->artist . " added :\n" . json_encode($data[$id]) . "\n";
-
+				echo logsTime() . "[SOCIALS] {$this->artist} ADDED ✅ :\n" . json_encode($data[$id]) . "\n\n";
 			}
 			// editing the artist
 			else {
 				$old_twitter = $data[$search_id]['twitter'];
 				$old_instagram = $data[$search_id]['instagram'];
 
-				echo logsTime() . "[SOCIALS] " . $this->artist . " editing... :\n" . json_encode($data[$search_id]) . "\n";
+				echo logsTime() . "[SOCIALS] {$this->artist} 📝 editing... :" . "\n" . json_encode($data[$search_id]) . "\n\n";
 
 				if ($artist_socials['twitter']) {
 					$new_twitter = [
@@ -114,7 +116,8 @@ class Album {
 						'username' => $artist_socials['twitter'],
 					];
 					$data[$search_id]['twitter'] = $new_twitter;
-					echo logsTime() . "[SOCIALS] " . $this->artist . " twitter edited (" . json_encode($old_twitter) . " => " . json_encode($new_twitter) . ")\n";
+					echo logsTime() . "[SOCIALS] [TWITTER] 🔵 {$this->artist} ✔️ :\n"
+						. "OLD: " . json_encode($old_twitter) . "\nNEW: " . json_encode($new_twitter) . "\n\n";
 				}
 
 				if ($artist_socials['instagram']) {
@@ -123,11 +126,12 @@ class Album {
 						'username' => $artist_socials['instagram'],
 					];
 					$data[$search_id]['instagram'] = $new_instagram;
-					echo logsTime() . "[SOCIALS] " . $this->artist . " instagram edited (" . json_encode($old_instagram) . " => " . json_encode($new_instagram) . ")\n";
+					echo logsTime() . "[SOCIALS] [INSTAGRAM] 🟣 {$this->artist} ✔️ :\n"
+						. "OLD: " . json_encode($old_instagram) . "\nNEW: " . json_encode($new_instagram) . "\n\n";
 				}
 
 				// LOGS
-				echo logsTime() . "[SOCIALS] " . $this->artist . " edited :\n" . json_encode($data[$search_id]) . "\n";
+				echo logsTime() . "[SOCIALS] {$this->artist} EDITED ✅ :\n" . json_encode($data[$search_id]) . "\n\n";
 			}
 			writeJSONFile("socials", $data);
 		}
@@ -245,11 +249,11 @@ class Album {
 				if (startsWithVowel($artist)) {
 					return "d'${artist} ";
 				} else if (startsWith(strtolower($artist), "les")) {
-					$artist = preg_replace("/^(l|L)es /", "", $artist);
+					$artist = preg_replace("/^([lL])es /", "", $artist);
 
 					return "des ${artist} ";
 				} else if (startsWith(strtolower($artist), "le")) {
-					$artist = preg_replace("/^(l|L)e /", "", $artist);
+					$artist = preg_replace("/^([lL])e /", "", $artist);
 
 					return "du ${artist} ";
 				} else {

@@ -10,7 +10,7 @@ if (!empty($_ENV['LOG_DIR']) && !empty($_ENV['LOG_POST'])) {
 	}
 }
 
-$file = dirname(__DIR__) . "/data/" . $file_prefixe . date("Ymd") . ".json";
+$file = dirname(__DIR__) . "/data/" . ($file_prefixe ?? '') . date("Ymd") . ".json";
 clearImgs();
 if (is_file($file)) {
 	unlink($file);

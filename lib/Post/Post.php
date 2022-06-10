@@ -108,7 +108,7 @@ class Post {
 		}
 
 		// not plural artists
-		$test = trim($this->album->getArtist(false,));
+		$test = trim($this->album->getArtist(false));
 		if($artist && !strstr($test, "artistes multiples") &&
 			!strstr($test, "multi-interprètes") &&
 			!strstr($test, "various artists") &&

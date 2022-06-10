@@ -3,21 +3,22 @@
 include_once dirname(__DIR__) . '/config.php';
 header("Content-type:application/json");
 
-use \InstagramAPI\Instagram;
+//use \InstagramAPI\Instagram;
 use Abraham\TwitterOAuth\TwitterOAuth;
 
 $json = file_get_contents(DIR_DATA . "socials.json");
 $data = json_decode($json, true);
 
-// instagram logging
-$debug = false;
-$ig = new Instagram($debug);
-try { // connexion
-	$ig->login($_ENV["INSTAGRAM_USERNAME"], $_ENV["INSTAGRAM_PASSWD"]);
-} catch (\Exception $e) {
-	echo 'Impossible de se connecter à Instagram: ' . $e->getMessage() . "\n";
-	exit(0);
-}
+//// instagram logging
+//$debug = false;
+//$ig = new Instagram($debug);
+$ig = null;
+//try { // connexion
+//	$ig->login($_ENV["INSTAGRAM_USERNAME"], $_ENV["INSTAGRAM_PASSWD"]);
+//} catch (\Exception $e) {
+//	echo 'Impossible de se connecter à Instagram: ' . $e->getMessage() . "\n";
+//	exit(0);
+//}
 
 // twitter logging
 $twit = new TwitterOAuth($_ENV["TWITTER_API_KEY"], $_ENV["TWITTER_API_SECRET_KEY"], $_ENV["TWITTER_ACCESS_TOKEN"], $_ENV["TWITTER_ACCESS_TOKEN_SECRET"]);
@@ -26,10 +27,10 @@ $twit->setTimeouts(60, 30);
 // loop
 foreach ($data as $i => $artist) {
 
-	// instagram
-	$data[$i]['instagram'] = instagram_user($artist['instagram']);
+//	// instagram
+//	$data[$i]['instagram'] = instagram_user($artist['instagram']);
 
-	// instagram
+	// twitter
 	$data[$i]['twitter'] = twitter_user($artist['twitter']);
 }
 

@@ -43,6 +43,9 @@ define('DIR_DATA', __DIR__.'/data/');
 define('DIRNAME_IMG', '/img/');
 define('DIR_IMG', __DIR__.DIRNAME_IMG);
 define('DIR_SCRIPT', __DIR__.'/script/');
+define('DIR_LOGS', __DIR__.'/logs');
+define('DIR_LOGS_IMG', DIR_LOGS . '/img');
+define('DIR_LOGS_GENIUS', DIR_LOGS . '/genius');
 
 // regular expressions
 define('REGEX_ALBUM_GENIUS', '/^(\*|\-) (?<day>(\d|X){2})\/(?<month>\d{2}) \: (?<artist>.*) (-|–) (?<album>.*)$/m');
@@ -79,7 +82,7 @@ function cleanString($string) {
 	$search = ['&#8234;', '&lrm;', '&#8236;', '&#8206;'];
 	$replace = ['', '', '', ''];
 
-	return str_replace($search, '', preg_replace('/(\x{200e}|\x{200f})/u', '', str_replace("–", "-", $string)));
+	return str_replace($search, '', preg_replace('/([\x{200e}\x{200f}])/u', '', str_replace("–", "-", $string)));
 }
 
 // create an assoc array with albums
@@ -146,27 +149,28 @@ function getTodaysAlbums($albums) {
 					}
 				}
 
+				$img_url = null;
 				if ($exception_artwork) {
 					// If there's a specific Genius album using a specific artwork
-					$img = saveImg($exception_artwork, $album["artist"]." ".$album["album"]);
+					$img_url = $exception_artwork;
 				}
 				// searching for the artwork
 				else if($entity = $genius->getAnnotationsResource()->getFirstImage($album["annotation_id"])) {
 					// trying to get the artwork on Genius
-					$img = saveImg($entity, $album["artist"]." ".$album["album"]);
+					$img_url = $entity;
 				}
 				else if($entity = findOniTunes($album)) {
 					// trying to get the artwork on iTunes
-					$img = saveImg($entity["artworkUrl100"], $album["artist"]." ".$album["album"]);
+					$img_url = $entity["artworkUrl100"];
 				}
 				else {
+					// no artwork found
 					$today_notFound[$year][] = $album;
 					continue;
 				}
 
-				if($img["response"]) {
-					$album["artwork"] = $img["name"];
-				}
+				$img = saveImg($img_url, $album["artist"]." ".$album["album"]);
+				$album["artwork"] = ($img['exists'] ?? false) ? $img["name"] : null;
 				$album["posted"] = false;
 				$today[$year][] = $album;
 				$todayCount++;
@@ -189,15 +193,110 @@ function writeJSONFile($name, $content) {
 	return file_put_contents(DIR_DATA."$name.json", json_encode($content));
 }
 
-function saveImg($url, $name) {
-	$name = urlencode($name);
-	$url = str_replace("100x100bb", IMG_WIDTH.'x'.IMG_WIDTH.'bb', $url);
-	$img_file = DIR_IMG.$name.".jpg";
-	if(!is_dir(DIR_IMG)) {
-		mkdir(DIR_IMG);
+function getImgContentFromUrl(string $url, bool $no_https = false):array {
+	ob_start();
+	$img = [
+		'url' => $url,
+		'https' => !$no_https,
+	];
+	if ($no_https) {
+		$url = str_replace("https://", "http://", $url);
+	}
+	$img['content'] = file_get_contents($url);
+	$img['errors'] = array_filter(explode("\n\n", ob_get_contents()));
+	if ($img['errors']) {
+		$img['errors'] = array_merge([logsTime() . 'ERROR ' . ($no_https ? 'WITHOUT' : 'WITH') . 'HTTPS'], $img['errors']);
+	}
+	ob_end_clean();
+	return $img;
+}
+
+function saveImg($url, $name, bool $delete_if_exists = false) {
+	$name_encoded = urlencode($name);
+	$img = [
+		// Parameters
+		'params'=> [
+			'url' => $url,
+			'name' => $name,
+		],
+		//
+		'name' => DIRNAME_IMG.$name_encoded.".jpg",
+		'name_encoded' => $name_encoded,
+		'url' => str_replace("100x100bb", IMG_WIDTH.'x'.IMG_WIDTH.'bb', $url),
+		'file' => DIR_IMG.$name_encoded.".jpg",
+		'content' => null,
+		'response' => false,
+		'exists' => false,
+		'result' => 'NOTHING',
+		'error' => [],
+		'data' => '',
+		'https' => [],
+	];
+
+	$date = new DateTime();
+
+	if ($delete_if_exists && file_exists($img['file'])) {
+		unlink($img['file']);
 	}
 
-	return ["response" => file_put_contents($img_file, file_get_contents($url)), "name" => DIRNAME_IMG.$name.".jpg"];
+
+	try {
+		// trying to get the artwork the first time
+		$data = getImgContentFromUrl($img['url']);
+		$content = $data['content'];
+		$img['https'][] = $data['https'];
+
+		$result_suffixe = '';
+
+
+		if ($content === FALSE) {
+			// merging errors
+			$img['error'] = array_merge($img['error'], $data['errors']);
+
+			// trying to get the artwork the second time without https this time
+			$data = getImgContentFromUrl($img['url'], true);
+			$content = $data['content'];
+			$img['https'][] = $data['https'];
+			$result_suffixe = ' (2)';
+		}
+
+		if ($content === FALSE) {
+			$img['content'] = false;
+			$img['exists'] = is_file($img['file']);
+			$img['result'] = $img['exists'] ? 'EXISTS' : 'FAILED';
+			if (!$img['exists']) {
+				$img['error'] = array_merge($img['error'], $data['errors']);
+			}
+			$img['error'][] = 'Failed to get the image';
+		}
+		else {
+			$img['content'] = is_string($content) ? mb_strlen($content) : null;
+			$img['exists'] = is_file($img['file']);
+			$img['result'] = "SUCCESS{$result_suffixe}";
+			$img['response'] = file_put_contents($img['file'], $content);
+		}
+	}
+	catch (Exception $e) {
+		$img['content'] = false;
+		$img['result'] = 'ERROR';
+		$img['error'] = $e->getMessage();
+	}
+
+	$img['data'] = $data['errors'] ?? 'Unknown error';
+
+	// log
+	$log_file = "log_{$date->format('Ymd')}.log";
+	$log_content = "[{$date->format('Y-m-d H:i:s')}] {$img['result']}"
+		. ($img['content'] ? '' : " - {$img['error']}")
+		. "\n" . print_r($img, true) . "\n";
+	file_put_contents(DIR_LOGS_IMG."/{$log_file}", $log_content, FILE_APPEND);
+
+	// response
+	return [
+		"response" => $img['response'],
+		"name" => $img['name'],
+		"exists" => $img['exists'],
+	];
 }
 
 // returns an interval
@@ -306,8 +405,13 @@ function albumStrFix($str) {
 	return str_replace(["Artistes multiples", "Various Artists", "Multi-interprètes", "Compilation", "compilation", "\""], "", str_replace("&amp;", "&", $str));
 }
 
-function logsTime() {
-	return "[".date('H:i:s', strtotime('now'))."] ";
+/**
+ * @return string "[H:i:s.u] "
+ */
+function logsTime(bool $include_pid = true): string {
+	$now = DateTime::createFromFormat('U.u', microtime(true));
+	$pid = $include_pid ? (' | ' . getmypid()) : "";
+	return "[{$now->format('H:i:s.u')}{$pid}] ";
 }
 
 ///////////////////////////////////
@@ -331,7 +435,7 @@ $img = (object) [
 ];
 
 function clearAlbum($album) {
-	return preg_replace("/\s*\(.*((b\.?o\.?)|(bande original)|(best(-|\s)?of)|(vol(ume)?)|((e|é)dition)|(album)|(version)|(bootleg)|(chapitre)|(compil)|(tape)|(attendant)|(digital)|(en route)|(ep)|(hors(-|\s)?)|(live)|(maxi)|(part)|(mix)|(saison)|(sp(e|é)cial)|(cd)|(street)|(ultime)|(deluxe)|(collect)|((e|é)pisode)).*\)/i", "", $album);
+	return preg_replace("/\s*\(.*((b\.?o\.?)|(bande original)|(best(-|\s)?of)|(vol(ume)?)|(([eé])dition)|(album)|(version)|(bootleg)|(chapitre)|(compil)|(tape)|(attendant)|(digital)|(en route)|(ep)|(hors(-|\s)?)|(live)|(maxi)|(part)|(mix)|(saison)|(sp([eé])cial)|(cd)|(street)|(ultime)|(deluxe)|(collect)|(([eé])pisode)).*\)/i", "", $album);
 }
 
 function generateHashtags($item) {
@@ -363,11 +467,11 @@ function getCaption($item) {
 			$artist = "d'${artist} ";
 		}
 		else if(startsWith(strtolower($artist), "les")) {
-			$artist = preg_replace("/^(l|L)es /", "", $artist);
+			$artist = preg_replace("/^([lL])es /", "", $artist);
 			$artist = "des ${artist} ";
 		}
 		else if(startsWith(strtolower($artist), "le")) {
-			$artist = preg_replace("/^(l|L)e /", "", $artist);
+			$artist = preg_replace("/^([lL])e /", "", $artist);
 			$artist = "du ${artist} ";
 		}
 		else {
@@ -584,64 +688,64 @@ function preg_in_array($needle, $haystack) {
 }
 
 function findArtistInstagramUsername($query, $year = 0, $ig = null, $minLength = 5) {
-	$return = null;
-
-	$exclude = ["assassinscreed", "_us", "_uk"];
-
-	if(strlen($query) < $minLength || $year < 2005) {
-		return $return;
-	}
-
-	if(!$ig) {
-		try {
-		    $ig = new Instagram();
-			// connexion
-			$ig->login($_ENV["INSTAGRAM_USERNAME"], $_ENV["INSTAGRAM_PASSWD"]);
-		} catch(\Exception $e) {
-			echo 'Something went wrong (1): '.$e->getMessage()."\n";
-			exit(0);
-		}
-	}
-
-	$search = $ig->people->search($query);
-	$query_pure = toPureString($query);
-
-	if($search->getNumResults()) {
-		//var_dump($search->getUsers());
-		/* @var User $user */
-		foreach($search->getUsers() as $user) {
-			$fullname_pure = toPureString($user->getFullName());
-			$username_pure = toPureString($user->getUsername());
-
-			$literal_match = $query_pure === $fullname_pure || $query_pure === $username_pure;
-			$preg_match = preg_match("/(${query_pure})/", $fullname_pure) || preg_match("/${query_pure}/", $username_pure);
-
-			if($user->getIsVerified() && $preg_match && !preg_in_array($username_pure, $exclude)) {
-
-				$debug = [
-					"query" => $query,
-					"result" => [
-						"pk" => $user->getPk(),
-						"username" => $user->getUsername(),
-						"full_name" => $user->getFullName(),
-						"verified" => $user->getIsVerified(),
-					],
-					"test" => [
-						"query" => $query_pure,
-						"fullname" => $fullname_pure,
-						"username" => $username_pure,
-						"match" => $literal_match,
-						"preg_match" => $preg_match,
-					],
-				];
-
-				$return = ["pk" => $user->getPk(), "username" => $user->getUsername()];
-				break;
-			}
-		}
-	}
-
-	return $return;
+//	$return = null;
+//
+//	$exclude = ["assassinscreed", "_us", "_uk"];
+//
+//	if(strlen($query) < $minLength || $year < 2005) {
+//		return $return;
+//	}
+//
+//	if(!$ig) {
+//		try {
+//		    $ig = new Instagram();
+//			// connexion
+//			$ig->login($_ENV["INSTAGRAM_USERNAME"], $_ENV["INSTAGRAM_PASSWD"]);
+//		} catch(\Exception $e) {
+//			echo 'Something went wrong (1): '.$e->getMessage()."\n";
+//			exit(0);
+//		}
+//	}
+//
+//	$search = $ig->people->search($query);
+//	$query_pure = toPureString($query);
+//
+//	if($search->getNumResults()) {
+//		//var_dump($search->getUsers());
+//		/* @var User $user */
+//		foreach($search->getUsers() as $user) {
+//			$fullname_pure = toPureString($user->getFullName());
+//			$username_pure = toPureString($user->getUsername());
+//
+//			$literal_match = $query_pure === $fullname_pure || $query_pure === $username_pure;
+//			$preg_match = preg_match("/(${query_pure})/", $fullname_pure) || preg_match("/${query_pure}/", $username_pure);
+//
+//			if($user->getIsVerified() && $preg_match && !preg_in_array($username_pure, $exclude)) {
+//
+//				$debug = [
+//					"query" => $query,
+//					"result" => [
+//						"pk" => $user->getPk(),
+//						"username" => $user->getUsername(),
+//						"full_name" => $user->getFullName(),
+//						"verified" => $user->getIsVerified(),
+//					],
+//					"test" => [
+//						"query" => $query_pure,
+//						"fullname" => $fullname_pure,
+//						"username" => $username_pure,
+//						"match" => $literal_match,
+//						"preg_match" => $preg_match,
+//					],
+//				];
+//
+//				$return = ["pk" => $user->getPk(), "username" => $user->getUsername()];
+//				break;
+//			}
+//		}
+//	}
+//
+//	return $return;
 }
 
 function clearImgs() {

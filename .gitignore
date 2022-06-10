@@ -1,12 +1,27 @@
-data/*
-img/*
-logs/*
-script/tests*
-script/img/*
-script/*.json
-desktop.ini
-vendor/
-cookie*
-.idea/
-*.xml
+# data
+data/**.json
+
+# img
+img/*.*
+
+# logs
+logs/**/*.log
+
+# configuration
 .env
+
+# ide
+.idea/
+
+# vendor
+vendor/
+
+# other
+desktop.ini
+cookie*
+.txt
+*.xml
+
+# tests
+script/*/*
+script/*.json

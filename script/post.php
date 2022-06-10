@@ -2,7 +2,8 @@
 // POST à partir de 9h toutes les 10 minutes
 // TODO : today_notFound
 // cron : */10 8-19 * * *	php script_post.php
-include dirname(__DIR__) . '/config.php';
+include dirname(__DIR__).'/config.php';
+
 //header("Content-type:text/html");
 
 use \Bot\Album;
@@ -12,19 +13,25 @@ use \Bot\Post\TwitterPost;
 $instagram_off = true;
 
 $res = [];
-$json = file_get_contents(dirname(__DIR__) . "/data/" . ($file_prefixe ?? '') . date("Ymd") . ".json");
+$album_path = dirname(__DIR__)."/data/".($file_prefixe ?? '').date("Ymd").".json";
+if (!is_file($album_path)) {
+	echo logsTime()."[POST] No file found for today\n";
+	exit;
+}
+$json = file_get_contents($album_path);
 $results = json_decode($json, true);
 $res["before"] = $results;
 
 //
 $prod = $_ENV['ENVIRONMENT'] === 'prod' || $_ENV['ENVIRONMENT'] === 'production';
+$simulated_suffix = $prod ? '' : ' - SIMULATED';
 $debug = isset($_ENV['DEBUG']) && boolval($_ENV['DEBUG']);
 
 echo "\n";
-if (intval($results["todayCount"]) === 0) {
+if(intval($results["todayCount"]) === 0) {
 	echo "===========================================================\n";
 	echo "===========================================================\n";
-	echo ($debug ? "[DEBUG] " : "") . date('Y-m-d H:i:s', strtotime('now')) . " [" . $_ENV['ENVIRONMENT'] . "]\n";
+	echo ($debug ? "[DEBUG] " : "").date('Y-m-d H:i:s', strtotime('now'))." [".$_ENV['ENVIRONMENT']."]\n";
 	echo "Nothing to post.\n";
 	echo "===========================================================\n";
 	echo "===========================================================\n";
@@ -33,70 +40,69 @@ if (intval($results["todayCount"]) === 0) {
 
 echo "===========================================================\n";
 echo "===========================================================\n";
-echo ($debug ? "[DEBUG] " : "") . date('Y-m-d H:i:s', strtotime('now')) . " [" . $_ENV['ENVIRONMENT'] . "]\n";
+echo ($debug ? "[DEBUG] " : "").date('Y-m-d H:i:s', strtotime('now'))." [".$_ENV['ENVIRONMENT']."]\n";
+echo "[PROCESS] : " . cli_get_process_title() . "\n";
 echo "===========================================================\n";
 echo "===========================================================\n";
-foreach ($results["today"] as $year => $entities) {
-	foreach ($entities as $i => $album) {
+echo "\n\n";
+foreach($results["today"] as $year => $entities) {
+	foreach($entities as $i => $album) {
 
-		echo logsTime() . "'" . $album['album'] . "' by " . $album['artist'] . " :\n";
+		// todo: create methods
 
-		if (!isPosted($album) && dateExceeded($album)) {
-			// todo: create methods
+		// log
+		echo logsTime()."'".$album['album']."' by ".$album['artist']." :\n";
 
-			$item = new Album($album);
-			if (!is_array($results["today"][$year][$i]["posted"])) {
-				$results["today"][$year][$i]["posted"] = [
-					'twitter' => false,
-					'instagram' => false,
-				];
-			}
-
-			if (!$item->getArtwork()) {
-				echo logsTime() . "\tno artwork found.\n";
-			} elseif (!isPostedTwitter($results["today"][$year][$i]["posted"])) {
-				//if (!isPostedTwitter($album)) {
-				echo logsTime() . "posting on twitter...\n";
-				$twitter = new TwitterPost($item);
-				$twitterRes = $twitter->post($prod, $debug);
-				$results["today"][$year][$i]["posted"]["twitter"] = $twitterRes; //true;
-				echo logsTime() . ($twitterRes ? "POSTED" : "ERROR") . "!\n";
-				writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
-			} else {
-				echo logsTime() . "\talready posted on twitter !\n";
-			}
-//
-//			if (false && !$instagram_off) {
-//				if (!isPostedInstagram($results["today"][$year][$i]["posted"])) {
-//					//if (!isPostedInstagram($album)) {
-//					echo logsTime() . "posting on instagram...\n";
-//					$instagram = new InstagramPost($item);
-//					$instagramRes = $instagram->post($prod, $debug);
-//					$results["today"][$year][$i]["posted"]["instagram"] = $instagramRes; //true;
-//					echo logsTime() . ($instagramRes ? "POSTED" : "ERROR") . "!\n";
-//					writeJSONFile(PREFIX_ALBUM_FILE . date("Ymd"), $results);
-//				} else {
-//					echo logsTime() . "\talready posted on instagram !\n";
-//				}
-//			}
-
-			//echo $album["album"] . " " . date("Y-m-d H:i:s", $album["post_date"]) . " < " . date("Y-m-d H:i:s", strtotime("now")) . "\n";
-
-			//
-		} else if (!dateExceeded($album)) {
-			echo logsTime() . "\tpost scheduled at " . date('Y-m-d H:i:s', $album["post_date"]) . ".\n";
-		} else {
-			echo logsTime() . "\talready posted.\n";
+		// checking if the album is already posted
+		if(isPosted($album)) {
+			// that's good
+			echo logsTime().'[POST] '."✔️ OK already posted.\n\n\n";
+			continue;
 		}
-		echo "\n";
-		continue;
+
+		// checking if the posting date is past
+		if(!dateExceeded($album)) {
+			// we're not posting yet
+			echo logsTime().'[POST] '."⌛ post scheduled at ".date('Y-m-d H:i:s', $album["post_date"]).".\n\n\n";
+			continue;
+		}
+
+		// initializing the entity
+		$item = new Album($album);
+		if(!is_array($results["today"][$year][$i]["posted"])) {
+			$results["today"][$year][$i]["posted"] = [
+				'twitter' => false,
+				'instagram' => false,
+			];
+		}
+
+		// checking if the album has an artwork
+		if(!$item->getArtwork()) {
+			// no artwork found
+			echo logsTime().'[POST] '."❌ FAILED - no artwork found.\n\n\n";
+			continue;
+		}
+
+		// checking if the album is posted on Twitter
+		if(isPostedTwitter($results["today"][$year][$i]["posted"])) {
+			echo logsTime().'[POST] '."✔️ OK - already posted on twitter !{$simulated_suffix}\n\n\n";
+			continue;
+		}
+
+		// we're now trying to post on Twitter
+		echo logsTime().'[POST] '."⌛ WAITING - posting on twitter...\n";
+		$twitter = new TwitterPost($item);
+		$twitterRes = $twitter->post($prod, $debug);
+		$results["today"][$year][$i]["posted"]["twitter"] = $twitterRes;
+		echo logsTime().'[POST] '.($twitterRes ? "✅ POSTED" : "❌ ERROR")."!{$simulated_suffix}\n\n\n";
+		writeJSONFile(PREFIX_ALBUM_FILE.date("Ymd"), $results);
 	}
 }
 echo "===========================================================\n";
 echo "===========================================================\n";
 echo "\n\n";
 
-writeJSONFile($file_prefixe . date("Ymd"), $results);
+writeJSONFile(($file_prefixe ?? '').date("Ymd"), $results);
 $res["after"] = $results;
 //echo json_encode($res);
 

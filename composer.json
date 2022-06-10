@@ -1,13 +1,24 @@
 {
 	"name": "damienmauchamp/album_fr_bot",
 	"description": "",
+	"version": "1.1",
+	"type": "project",
+	"authors": [
+		{
+			"name": "Damien Mauchamp",
+			"email": "damienmauchamp@gmail.com",
+			"homepage": "https://linktr.ee/damienmauchamp",
+			"role": "Developer"
+		}
+	],
 	"require": {
+		"php": ">=7.2",
 		"vlucas/phpdotenv": "^3.3",
 		"abraham/twitteroauth": "^1.0",
-      "ext-json": "*",
+      	"ext-json": "*",
 		"ext-curl": "*",
 		"nategood/httpful": "^0.2.20",
-		"monolog/monolog": "^2.0",
+		"monolog/monolog": "^2.7",
 		"kub-at/php-simple-html-dom-parser": "^1.9",
 		"ext-mbstring": "*"
 	},
