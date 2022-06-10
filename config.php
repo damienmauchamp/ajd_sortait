@@ -62,10 +62,10 @@ header("Content-type:application/json");
 ini_set('max_execution_time', 0);
 
 // dependencies
-use \InstagramAPI\Instagram;
+// use \InstagramAPI\Instagram;
 
 // allows you to upload an instagram post via the browser
-\InstagramAPI\Instagram::$allowDangerousWebUsageAtMyOwnRisk = ENVIRONMENT_IS_DEV;
+// \InstagramAPI\Instagram::$allowDangerousWebUsageAtMyOwnRisk = ENVIRONMENT_IS_DEV;
 
 // Genius API instance
 $genius = new \Genius\Genius($_ENV['GENIUS_CLIENT_ACCESS_TOKEN']);
@@ -138,7 +138,7 @@ function getTodaysAlbums($albums) {
 				$entity = $img = false;
 
 				// todo exceptions
-				$exceptions = json_decode('[{"annotation_id": "13541296", "artwork": "https://t2.genius.com/unsafe/852x0/https%3A%2F%2Fimages.genius.com%2F703580020e9e40ea47107ab52dd6c956.1000x1000x1.jpg", "name": "21/03/2018 : Usky - Porte dorée (Saison 1)"} ]');
+				$exceptions = json_decode('[{"annotation_id": "13541296", "artwork": "https://t2.genius.com/unsafe/852x0/https%3A%2F%2Fimages.genius.com%2F703580020e9e40ea47107ab52dd6c956.1000x1000x1.jpg", "name": "21/03/2018 : Usky - Porte dorée (Saison 1)"} ]', true);
 				$exception_artwork = null;
 				foreach ($exceptions as $exception) {
 					if ($exception['annotation_id'] === $album["annotation_id"]) {
@@ -593,8 +593,8 @@ function findArtistInstagramUsername($query, $year = 0, $ig = null, $minLength =
 	}
 
 	if(!$ig) {
-		$ig = new Instagram();
 		try {
+		    $ig = new Instagram();
 			// connexion
 			$ig->login($_ENV["INSTAGRAM_USERNAME"], $_ENV["INSTAGRAM_PASSWD"]);
 		} catch(\Exception $e) {
