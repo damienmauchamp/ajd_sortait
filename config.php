@@ -257,7 +257,7 @@ function saveImg($url, $name, bool $delete_if_exists = false) {
 			$data = getImgContentFromUrl($img['url'], true);
 			$content = $data['content'];
 			$img['https'][] = $data['https'];
-			$result_suffixe = ' (2)';
+			$result_suffixe = ' (HTTP)';
 		}
 
 		if ($content === FALSE) {
@@ -271,9 +271,9 @@ function saveImg($url, $name, bool $delete_if_exists = false) {
 		}
 		else {
 			$img['content'] = is_string($content) ? mb_strlen($content) : null;
+			$img['response'] = file_put_contents($img['file'], $content);
 			$img['exists'] = is_file($img['file']);
 			$img['result'] = "SUCCESS{$result_suffixe}";
-			$img['response'] = file_put_contents($img['file'], $content);
 		}
 	}
 	catch (Exception $e) {
