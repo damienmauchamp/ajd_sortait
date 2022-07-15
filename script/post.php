@@ -124,7 +124,7 @@ foreach($results["today"] as $year => $entities) {
 		$suffixe = $errors ? " - {$errors} - {$message} " : '';
 
 //		$results["today"][$year][$i]["posted"]["twitter"] = $twitterRes;
-		echo logsTime().'[POST] '.($twitterRes ? "✅ POSTED" : "❌ ERROR")."!{$suffixe}{$simulated_suffix}\n\n\n";
+		echo logsTime().'[POST] '.($posted ? "✅ POSTED" : "❌ ERROR")."!{$suffixe}{$simulated_suffix}\n\n\n";
 		writeJSONFile(PREFIX_ALBUM_FILE.date("Ymd"), $results);
 	}
 }
