@@ -3,6 +3,7 @@
 namespace Bot\Post;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
+use Abraham\TwitterOAuth\TwitterOAuthException;
 
 class TwitterPost extends Post {
 
@@ -32,35 +33,39 @@ class TwitterPost extends Post {
 			return ['posted' => false, 'error' => false, 'message' => 'Posts on Twitter disabled'];
 		}
 
-		$media = $this->connection->upload('media/upload', array('media' => $this->artwork));
-		$media_id_string = $media->media_id_string ?? false;
-		if(!$media_id_string || $media->errors ?? false) {
+		try {
+			$media = $this->connection->upload('media/upload', array('media' => $this->artwork));
+			$media_id_string = $media->media_id_string ?? false;
+			if(!$media_id_string || $media->errors ?? false) {
+				$this->log(array(
+					'debug' => $debug,
+					'media' => $this->artwork,
+					'not_posted' => true,
+					'error' => $media->errors ?? null
+				));
+				return ['posted' => false, 'error' => $media->errors ?? null, 'message' => 'Error while uploading media'];
+			}
+
+			$parameters = [
+				'status' => $this->content,
+				'media_ids' => implode(',', [$media_id_string])
+			];
+
 			$this->log(array(
 				'debug' => $debug,
 				'media' => $this->artwork,
-				'not_posted' => true,
-				'error' => $media->errors ?? null
+				'parameters' => $parameters
 			));
-			return ['posted' => false, 'error' => $media->errors ?? null, 'message' => 'Error while uploading media'];
-		}
 
-		$parameters = [
-			'status' => $this->content,
-			'media_ids' => implode(',', [$media_id_string])
-		];
-
-		$this->log(array(
-			'debug' => $debug,
-			'media' => $this->artwork,
-			'parameters' => $parameters
-		));
-
-		if($prod) {
-			$posting = $this->connection->post('statuses/update', $parameters);
-			if ($posting->errors ?? false) {
-				return ['posted' => false, 'error' => $posting->errors, 'message' => 'Error while posting'];
+			if($prod) {
+				$posting = $this->connection->post('statuses/update', $parameters);
+				if($posting->errors ?? false) {
+					return ['posted' => false, 'error' => $posting->errors, 'message' => 'Error while posting'];
+				}
+				return ['posted' => true, 'error' => false, 'message' => ''];
 			}
-			return ['posted' => true, 'error' => false, 'message' => ''];
+		} catch (TwitterOAuthException $exception) {
+			return ['posted' => false, 'error' => "Exception: {$exception->getMessage()}", 'message' => 'Error while posting'];
 		}
 		return ['posted' => false, 'error' => false, 'message' => 'Twitter post simulated'];
 	}
