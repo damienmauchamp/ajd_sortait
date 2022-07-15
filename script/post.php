@@ -113,7 +113,15 @@ foreach($results["today"] as $year => $entities) {
 		$results["today"][$year][$i]["posted"]["twitter"] = $posted;
 		$results["today"][$year][$i]["errors"]["twitter"] = $error;
 
-		$suffixe = $error ? " - {$error} - {$message} " : '';
+		$errors = '';
+		if (is_array($error)) {
+			foreach ($error as $e) {
+				$errors .= "Code {$e->code}: {$e->message} //";
+			}
+			$errors = rtrim($errors, ' /');
+		}
+
+		$suffixe = $errors ? " - {$errors} - {$message} " : '';
 
 //		$results["today"][$year][$i]["posted"]["twitter"] = $twitterRes;
 		echo logsTime().'[POST] '.($twitterRes ? "✅ POSTED" : "❌ ERROR")."!{$suffixe}{$simulated_suffix}\n\n\n";
