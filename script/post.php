@@ -75,7 +75,7 @@ foreach($results["today"] as $year => $entities) {
 				'instagram' => false,
 			];
 		}
-		if(!is_array($results["today"][$year][$i]["errors"])) {
+		if(!isset($results["today"][$year][$i]["errors"]) || !is_array($results["today"][$year][$i]["errors"])) {
 			$results["today"][$year][$i]["errors"] = [
 				'twitter' => false,
 				'instagram' => false,
