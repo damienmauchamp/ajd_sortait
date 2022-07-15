@@ -25,3 +25,6 @@ cookie*
 # tests
 script/*/*
 script/*.json
+
+# composer
+composer.lock
