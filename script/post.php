@@ -14,7 +14,7 @@ $instagram_off = true;
 
 $res = [];
 $album_path = dirname(__DIR__)."/data/".($file_prefixe ?? '').date("Ymd").".json";
-if (!is_file($album_path)) {
+if(!is_file($album_path)) {
 	echo logsTime()."[POST] No file found for today\n";
 	exit;
 }
@@ -41,7 +41,7 @@ if(intval($results["todayCount"]) === 0) {
 echo "===========================================================\n";
 echo "===========================================================\n";
 echo ($debug ? "[DEBUG] " : "").date('Y-m-d H:i:s', strtotime('now'))." [".$_ENV['ENVIRONMENT']."]\n";
-echo "[PROCESS] : " . cli_get_process_title() . "\n";
+echo "[PROCESS] : ".cli_get_process_title()."\n";
 echo "===========================================================\n";
 echo "===========================================================\n";
 echo "\n\n";
@@ -75,11 +75,23 @@ foreach($results["today"] as $year => $entities) {
 				'instagram' => false,
 			];
 		}
+		if(!is_array($results["today"][$year][$i]["errors"])) {
+			$results["today"][$year][$i]["errors"] = [
+				'twitter' => false,
+				'instagram' => false,
+			];
+		}
 
 		// checking if the album has an artwork
 		if(!$item->getArtwork()) {
 			// no artwork found
 			echo logsTime().'[POST] '."❌ FAILED - no artwork found.\n\n\n";
+			continue;
+		}
+
+		// checking if we faced an error earlier
+		if ($results["today"][$year][$i]["errors"]["twitter"]) {
+			echo logsTime().'[POST] '."⭕ SKIPPED - we faced an error earlier.{$simulated_suffix}\n\n\n";
 			continue;
 		}
 
@@ -93,8 +105,18 @@ foreach($results["today"] as $year => $entities) {
 		echo logsTime().'[POST] '."⌛ WAITING - posting on twitter...\n";
 		$twitter = new TwitterPost($item);
 		$twitterRes = $twitter->post($prod, $debug);
-		$results["today"][$year][$i]["posted"]["twitter"] = $twitterRes;
-		echo logsTime().'[POST] '.($twitterRes ? "✅ POSTED" : "❌ ERROR")."!{$simulated_suffix}\n\n\n";
+
+		$posted = $twitterRes['posted'];
+		$error = $twitterRes['error'];
+		$message = $twitterRes['message'];
+
+		$results["today"][$year][$i]["posted"]["twitter"] = $posted;
+		$results["today"][$year][$i]["errors"]["twitter"] = $error;
+
+		$suffixe = $error ? " - {$error} - {$message} " : '';
+
+//		$results["today"][$year][$i]["posted"]["twitter"] = $twitterRes;
+		echo logsTime().'[POST] '.($twitterRes ? "✅ POSTED" : "❌ ERROR")."!{$suffixe}{$simulated_suffix}\n\n\n";
 		writeJSONFile(PREFIX_ALBUM_FILE.date("Ymd"), $results);
 	}
 }
