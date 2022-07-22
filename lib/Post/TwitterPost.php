@@ -43,7 +43,7 @@ class TwitterPost extends Post {
 					'not_posted' => true,
 					'error' => $media->errors ?? null
 				));
-				return ['posted' => false, 'error' => $media->errors ?? null, 'message' => 'Error while uploading media'];
+				return ['posted' => false, 'error' => $media->errors ?? "Error while uploading media, id_string: {$media_id_string}", 'message' => 'Error while uploading media'];
 			}
 
 			$parameters = [
