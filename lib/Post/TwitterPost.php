@@ -36,14 +36,14 @@ class TwitterPost extends Post {
 		try {
 			$media = $this->connection->upload('media/upload', array('media' => $this->artwork));
 			$media_id_string = $media->media_id_string ?? false;
-			if(!$media_id_string || $media->errors ?? false) {
+			if(!$media_id_string) {
 				$this->log(array(
 					'debug' => $debug,
 					'media' => $this->artwork,
 					'not_posted' => true,
 					'error' => $media->errors ?? null
 				));
-				return ['posted' => false, 'error' => $media->errors ?? null, 'message' => 'Error while uploading media'];
+				return ['posted' => false, 'error' => "Error while uploading media ({$this->connection->getLastHttpCode()})", 'message' => 'Error while uploading media'];
 			}
 
 			$parameters = [
