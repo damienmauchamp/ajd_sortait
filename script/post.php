@@ -53,6 +53,13 @@ foreach($results["today"] as $year => $entities) {
 		// log
 		echo logsTime()."'".$album['album']."' by ".$album['artist']." :\n";
 
+		// checking if the artist is not a dickhead
+		if (isBanned($album['artist'])) {
+			// that's really not good
+			echo logsTime().'[POST] '."⛔ {$album['artist']} is banned.\n\n\n";
+			continue;
+		}
+
 		// checking if the album is already posted
 		if(isPosted($album)) {
 			// that's good
@@ -136,18 +143,40 @@ writeJSONFile(($file_prefixe ?? '').date("Ymd"), $results);
 $res["after"] = $results;
 //echo json_encode($res);
 
-function isPosted($album) {
+function isPosted(array $album):bool {
 	return $album["posted"] && isPostedTwitter($album) && isPostedInstagram($album);
 }
 
-function isPostedTwitter($posted) {
+function isPostedTwitter(array $posted):bool {
 	return isset($posted['twitter']) && $posted['twitter'];
 }
 
-function isPostedInstagram($posted) {
+function isPostedInstagram(array $posted):bool {
 	return isset($posted['instagram']) && $posted['instagram'];
 }
 
-function dateExceeded($album) {
+function dateExceeded($album):bool {
 	return $album["post_date"] < strtotime("now");
+}
+
+function isBanned(string $artistName): bool {
+
+	$file = DIR_DATA . 'banned.json';
+	if (!is_file($file)) {
+		return false;
+	}
+
+	$data = json_decode(file_get_contents($file), true);
+	$bannedArtists = $data['banned'] ?? [];
+
+	foreach ($bannedArtists as $artist) {
+		$names = array_merge([$artist['name']], $artist['otherNames'] ?? []);
+		foreach ($names as $name) {
+			if (mb_strtolower(trim($artistName))  === mb_strtolower(trim($name))) {
+				return true;
+			}
+		}
+	}
+	return false;
+
 }
