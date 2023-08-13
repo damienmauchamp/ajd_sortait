@@ -18,7 +18,6 @@ class TwitterPost extends Post {
 
 	protected function connect() {
 		$this->connection = new TwitterOAuth($_ENV["TWITTER_API_KEY"], $_ENV["TWITTER_API_SECRET_KEY"], $_ENV["TWITTER_ACCESS_TOKEN"], $_ENV["TWITTER_ACCESS_TOKEN_SECRET"]);
-		$this->connection->setApiVersion('2');
 		$this->connection->setTimeouts(60, 30);
 		return true;
 	}
@@ -35,6 +34,7 @@ class TwitterPost extends Post {
 		}
 
 		try {
+			$this->connection->setApiVersion('1.1');
 			$media = $this->connection->upload('media/upload', array('media' => $this->artwork));
 			$media_id_string = $media->media_id_string ?? false;
 			if(!$media_id_string) {
@@ -59,7 +59,9 @@ class TwitterPost extends Post {
 			));
 
 			if($prod) {
+				$this->connection->setApiVersion('2');
 				$posting = $this->connection->post('statuses/update', $parameters);
+				$this->connection->setApiVersion('1.1');
 				if($posting->errors ?? false) {
 					return ['posted' => false, 'error' => $posting->errors, 'message' => 'Error while posting'];
 				}
