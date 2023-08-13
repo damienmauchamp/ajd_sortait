@@ -18,6 +18,7 @@ class TwitterPost extends Post {
 
 	protected function connect() {
 		$this->connection = new TwitterOAuth($_ENV["TWITTER_API_KEY"], $_ENV["TWITTER_API_SECRET_KEY"], $_ENV["TWITTER_ACCESS_TOKEN"], $_ENV["TWITTER_ACCESS_TOKEN_SECRET"]);
+		$this->connection->setApiVersion('2');
 		$this->connection->setTimeouts(60, 30);
 		return true;
 	}
