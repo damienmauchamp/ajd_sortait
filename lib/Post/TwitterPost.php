@@ -34,9 +34,12 @@ class TwitterPost extends Post {
 		}
 
 		try {
+
+			// API v1.1 for media
 			$this->connection->setApiVersion('1.1');
-			$media = $this->connection->upload('media/upload', array('media' => $this->artwork));
+			$media = $this->connection->upload('media/upload', ['media' => $this->artwork]);
 			$media_id_string = $media->media_id_string ?? false;
+
 			if(!$media_id_string) {
 				$this->log(array(
 					'debug' => $debug,
@@ -48,20 +51,21 @@ class TwitterPost extends Post {
 			}
 
 			$parameters = [
-				'status' => $this->content,
-				'media_ids' => implode(',', [$media_id_string])
+				'text' => $this->content,
+				'media' => ['media_ids' => [$media_id_string]],
 			];
 
-			$this->log(array(
+			$this->log([
 				'debug' => $debug,
 				'media' => $this->artwork,
 				'parameters' => $parameters
-			));
+			]);
 
 			if($prod) {
+				// API v2 for posting
 				$this->connection->setApiVersion('2');
-				$posting = $this->connection->post('statuses/update', $parameters);
-				$this->connection->setApiVersion('1.1');
+				$posting = $this->connection->post('tweets', $parameters, true);
+
 				if($posting->errors ?? false) {
 					return ['posted' => false, 'error' => $posting->errors, 'message' => 'Error while posting'];
 				}
