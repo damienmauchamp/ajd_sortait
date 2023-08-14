@@ -8,7 +8,7 @@ img/*.*
 logs/**/*.log
 
 # configuration
-.env
+.env*
 
 # ide
 .idea/
@@ -28,3 +28,5 @@ script/*.json
 
 # composer
 composer.lock
+
+tests/
