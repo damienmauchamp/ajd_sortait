@@ -48,17 +48,19 @@ define('DIR_LOGS_IMG', DIR_LOGS . '/img');
 define('DIR_LOGS_GENIUS', DIR_LOGS . '/genius');
 
 // regular expressions
-define('REGEX_ALBUM_GENIUS', '/^(\*|\-) (?<day>(\d|X){2})\/(?<month>\d{2}) \: (?<artist>.*) (-|–) (?<album>.*)$/m');
-define('REGEX_UNKNOWN_ALBUM_GENIUS', '/^(\*|\-) ((?<day>X{2})\/(?<month>X{2}) \: )?(?<inter>Du (?<iday1>(X|\d){2})\/(?<imonth1>(X|\d){2}) au (?<iday2>(X|\d){2})\/(?<imonth2>(X|\d){2}) :)?(?<artist>[^((X|\d{2})\/(X|\d{2}))].*) (- |– )(?<album>.*)$/m');
-define('REGEX_ALBUM_GENIUS_HTML2', '/((?!\\").)*(?:<(?:a).*?data-id="(?<annotation_id>[^"]*?)".*?>)?(?:(\*|\-)) (?<day>(?:\d|X){2})\/(?<month>\d{2}) (\:|\-) (?<artist>(?:(?!\s\-|\–|\—\s).)*)(?:\s*(?:\-|\–|\—)\s*)(?:<i>)?(?<album>(?:(?!<\/?(i|a|br)>).)*)(?:\s*<\/i>\s*)?(?:<\/a>)?/');
+const REGEX_ALBUM_GENIUS = '/^(\*|\-) (?<day>(\d|X){2})\/(?<month>\d{2}) \: (?<artist>.*) (-|–) (?<album>.*)$/m';
+const REGEX_UNKNOWN_ALBUM_GENIUS = '/^(\*|\-) ((?<day>X{2})\/(?<month>X{2}) \: )?(?<inter>Du (?<iday1>(X|\d){2})\/(?<imonth1>(X|\d){2}) au (?<iday2>(X|\d){2})\/(?<imonth2>(X|\d){2}) :)?(?<artist>[^((X|\d{2})\/(X|\d{2}))].*) (- |– )(?<album>.*)$/m';
+const REGEX_ALBUM_GENIUS_HTML2 = '/((?!\\").)*(?:<(?:a).*?data-id="(?<annotation_id>[^"]*?)".*?>)?(?:(\*|\-)) (?<day>(?:\d|X){2})\/(?<month>\d{2}) (\:|\-) (?<artist>(?:(?!\s\-|\–|\—\s).)*)(?:\s*(?:\-|\–|\—)\s*)(?:<i>)?(?<album>(?:(?!<\/?(i|a|br)>).)*)(?:\s*<\/i>\s*)?(?:<\/a>)?/';
 /*define('REGEX_ALBUM_GENIUS_HTML', '/(?:<(?:a).*?data-id="(?<annotation_id>[^"]*?)".*?>)?(?:(\*|\-)) (?<day>(?:\d|X){2})\/(?<month>\d{2}) (\:|\-) (?<artist>(?:(?!\s\-|\–|\—\s).)*)(?:\s*(?:\-|\–|\—)\s*)(?:<i>)?(?<album>(?:(?!(\\"|<\/?(i|a|br)>)).)*)(?:\s*<\/i>\s*)?(?:<\/a>)?/');*/
 /*define('REGEX_ALBUM_GENIUS_HTML', '/(?:<(?:a).*?data-id="(?<annotation_id>[^"]*?)"[^>]*?>)?(?:(\*|\-)) (?<day>(?:\d|X){2})\/(?<month>\d{2}) (\:|\-) (?<artist>(?:(?!\s\-|\–|\—\s).)*)(?:\s*(?:\-|\–|\—)\s*)(?:<i>)?(?<album>(?:(?!(\\"|<\/?(i|a|br)>)).)*)(?:\s*<\/i>\s*)?(?:<\/a>)?/');*/
-define('REGEX_ALBUM_GENIUS_HTML', '/(?:<(?:a).*?href="\/?(?<annotation_id>[^\/]+)\/[^>]*>(?:<span[^>]+>)?)?(?:(\*|\-)) (?<day>(?:\d|X){2})\/(?<month>\d{2}) (\:|\-) (?<artist>(?:(?!\s\-|\–|\—\s).)*)(?:\s*(?:\-|\–|\—)\s*)(?:<i>)?(?<album>(?:(?!(\\"|<\/?(i|a|br)>)).)*)(?:\s*<\/i>\s*)?(?:<\/a>)?/');
-define('REGEX_ALBUM_BRACKETS', "/\s+\((?<content>[^()]*((?:b\.?o\.?)|(?:bande original)|(?:best(-|\s)?of)|(?:vol(ume)?)|(?:(e|é)dition)|(?:album)|(?:version)|(?:bootleg)|(?:chapitre)|(?:compil)|(?:tape)|(?:attendant)|(?:digital)|(?:en route)|(?:ep)|(?:hors(-|\s)?)|(?:live)|(?:maxi)|(?:part)|(?:mix)|(?:saison)|(?:sp(e|é)cial)|(?:cd)|(?:street)|(?:ultime)|(?:deluxe)|(?:collect)|(?:(e|é)pisode))[^()]*)\)$/mi");
-define('REGEX_ONLY_ALPHANUMERIC', "/(*UTF8)[^\p{L}\p{M}0-9 ]/");
+const REGEX_ALBUM_GENIUS_HTML = '/(?:<(?:a).*?href="\/?(?<annotation_id>[^\/]+)\/[^>]*>(?:<span[^>]+>)?)?(?:(\*|\-)) (?<day>(?:\d|X){2})\/(?<month>\d{2}) (\:|\-) ((?<artist>(?:(?!\s\-|\–|\—\s|<).)*)(?:\s*(?:\-|\–|\—)\s*))?(?:<i>)?(?<album>(?:(?![\n\r])(?!(\\"|<\/?(i|a|br)>)).)*)(?:\s*<\/i>\s*)?(?:<\/a>)?/';
+//const REGEX_ALBUM_GENIUS_HTML = '/(?:<(?:a).*?href="\/?(?<annotation_id>[^\/]+)\/[^>]*>(?:<span[^>]+>)?)?(?:(\*|\-)) (?<day>(?:\d|X){2})\/(?<month>\d{2}) (\:|\-) (?<artist>(?:(?!\s\-|\–|\—\s).)*)(?![\n\r])(?:\s*(?:\-|\–|\—)\s*)(?:<i>)?(?<album>(?:(?![\n\r])(?!(\\"|<\/?(i|a|br)>)).)*)(?:\s*<\/i>\s*)?(?:<\/a>)?/';
+//define('REGEX_ALBUM_GENIUS_HTML', '/(?:<(?:a).*?href="\/?(?<annotation_id>[^\/]+)\/[^>]*>(?:<span[^>]+>)?)?(?:(\*|\-)) (?<day>(?:\d|X){2})\/(?<month>\d{2}) (\:|\-) (?<artist>(?:(?!\s\-|\–|\—\s).)*)(?:\s*(?:\-|\–|\—)\s*)(?:<i>)?(?<album>(?:(?!(\\"|<\/?(i|a|br)>)).)*)(?:\s*<\/i>\s*)?(?:<\/a>)?/');
+const REGEX_ALBUM_BRACKETS = "/\s+\((?<content>[^()]*((?:b\.?o\.?)|(?:bande original)|(?:best(-|\s)?of)|(?:vol(ume)?)|(?:(e|é)dition)|(?:album)|(?:version)|(?:bootleg)|(?:chapitre)|(?:compil)|(?:tape)|(?:attendant)|(?:digital)|(?:en route)|(?:ep)|(?:hors(-|\s)?)|(?:live)|(?:maxi)|(?:part)|(?:mix)|(?:saison)|(?:sp(e|é)cial)|(?:cd)|(?:street)|(?:ultime)|(?:deluxe)|(?:collect)|(?:(e|é)pisode))[^()]*)\)$/mi";
+const REGEX_ONLY_ALPHANUMERIC = "/(*UTF8)[^\p{L}\p{M}0-9 ]/";
 
 //
-define('ITUNES_API_URL', 'https://itunes.apple.com/search?entity=album&country=fr&limit=100&term=');
+const ITUNES_API_URL = 'https://itunes.apple.com/search?entity=album&country=fr&limit=100&term=';
 
 // ini options & header
 header("Content-type:application/json");

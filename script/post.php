@@ -126,6 +126,8 @@ foreach($results["today"] as $year => $entities) {
 				$errors .= "Code {$e->code}: {$e->message} //";
 			}
 			$errors = rtrim($errors, ' /');
+		} else {
+			$errors = $error;
 		}
 
 		$suffixe = $errors ? " - {$errors} - {$message} " : '';

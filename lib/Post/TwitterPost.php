@@ -56,6 +56,7 @@ class TwitterPost extends Post {
 			];
 
 			$this->log([
+				'type' => 'media/upload',
 				'debug' => $debug,
 				'media' => $this->artwork,
 				'parameters' => $parameters
@@ -66,12 +67,28 @@ class TwitterPost extends Post {
 				$this->connection->setApiVersion('2');
 				$posting = $this->connection->post('tweets', $parameters, true);
 
-				if($posting->errors ?? false) {
-					return ['posted' => false, 'error' => $posting->errors, 'message' => 'Error while posting'];
+				$error = $posting->errors ?? $posting->reason ?? false;
+				$details = $error ? ($posting->detail ?? '') : '';
+				$error_message = trim(sprintf('%s : %s', $error, $details), ': ');
+
+				$this->log([
+					'type' => 'tweets',
+					'error' => $error_message,
+					'result' => $posting,
+					'parameters' => $parameters
+				]);
+
+				if($error) {
+					return [
+						'posted' => false,
+						'error' => $posting->errors ?? $posting->reason ?? json_encode($posting),
+						'message' => 'Error while posting - '.$error_message,
+						'details' => $posting,
+					];
 				}
 				return ['posted' => true, 'error' => false, 'message' => ''];
 			}
-		} catch (TwitterOAuthException $exception) {
+		} catch(TwitterOAuthException $exception) {
 			return ['posted' => false, 'error' => "Exception: {$exception->getMessage()}", 'message' => 'Error while posting'];
 		}
 		return ['posted' => false, 'error' => false, 'message' => 'Twitter post simulated'];

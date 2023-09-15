@@ -1,32 +1,32 @@
 {
 	"name": "damienmauchamp/album_fr_bot",
 	"description": "",
-	"version": "1.1",
+	"version": "1.2",
 	"type": "project",
 	"authors": [
 		{
 			"name": "Damien Mauchamp",
 			"email": "damienmauchamp@gmail.com",
-			"homepage": "https://linktr.ee/damienmauchamp",
+			"homepage": "https://dmchp.fr",
 			"role": "Developer"
 		}
 	],
 	"require": {
 		"php": ">=7.4",
 		"vlucas/phpdotenv": "^3.3",
-		"abraham/twitteroauth": "^4.0",
-      	"ext-json": "*",
-		"ext-curl": "*",
+		"abraham/twitteroauth": "^6.0",
 		"nategood/httpful": "^0.2.20",
 		"monolog/monolog": "^2.7",
 		"kub-at/php-simple-html-dom-parser": "^1.9",
+		"ext-json": "*",
+		"ext-curl": "*",
 		"ext-mbstring": "*"
 	},
 	"scripts": {
-		"bot-init": "php script/init.php",
-		"bot-post": "php script/post.php",
-		"bot-end": "php script/end.php",
-		"bot-socials": "php script/socials.php"
+		"bot-init": "@php script/init.php",
+		"bot-post": "@php script/post.php",
+		"bot-end": "@php script/end.php",
+		"bot-socials": "@php script/socials.php"
 	},
 	"autoload": {
 		"psr-4": {
