@@ -14,7 +14,7 @@
 	"require": {
 		"php": ">=7.4",
 		"vlucas/phpdotenv": "^3.3",
-		"abraham/twitteroauth": "^6.0",
+		"abraham/twitteroauth": "^4.0",
 		"nategood/httpful": "^0.2.20",
 		"monolog/monolog": "^2.7",
 		"kub-at/php-simple-html-dom-parser": "^1.9",
