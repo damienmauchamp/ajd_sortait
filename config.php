@@ -466,18 +466,18 @@ function getCaption($item) {
 
 	if($artist !== '') {
 		if(isVowel($artist[0])) {
-			$artist = "d'${artist} ";
+			$artist = "d'{£artist} ";
 		}
 		else if(startsWith(strtolower($artist), "les")) {
 			$artist = preg_replace("/^([lL])es /", "", $artist);
-			$artist = "des ${artist} ";
+			$artist = "des {£artist} ";
 		}
 		else if(startsWith(strtolower($artist), "le")) {
 			$artist = preg_replace("/^([lL])e /", "", $artist);
-			$artist = "du ${artist} ";
+			$artist = "du {£artist} ";
 		}
 		else {
-			$artist = "de ${artist} ";
+			$artist = "de {£artist} ";
 		}
 	}
 
@@ -494,8 +494,8 @@ function getCaption($item) {
 //			$caption = "La compilation ";
 //		}
 //
-//		//$caption .= "\"${name}\" ". ($artist !== '' ? "de ${artist} " : "") ."sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
-//		$caption .= "\"${name}\" ${artist}sortait il y a ${old} an".($old > 1 ? "s" : "").".";
+//		//$caption .= "\"{$name}\" ". ($artist !== '' ? "de {£artist} " : "") ."sortait il y a {$old} an" . ($old > 1 ? "s" : "") . ".";
+//		$caption .= "\"{$name}\" {£artist}sortait il y a {$old} an".($old > 1 ? "s" : "").".";
 //		return $caption;
 //	} else {
 	// v2
@@ -681,7 +681,7 @@ function toPureString($str) {
 
 function preg_in_array($needle, $haystack) {
 	foreach($haystack as $h) {
-		if(preg_match("/${h}/", $needle)) {
+		if(preg_match("/{$h}/", $needle)) {
 			return true;
 		}
 	}
@@ -720,7 +720,7 @@ function findArtistInstagramUsername($query, $year = 0, $ig = null, $minLength =
 //			$username_pure = toPureString($user->getUsername());
 //
 //			$literal_match = $query_pure === $fullname_pure || $query_pure === $username_pure;
-//			$preg_match = preg_match("/(${query_pure})/", $fullname_pure) || preg_match("/${query_pure}/", $username_pure);
+//			$preg_match = preg_match("/({$query_pure})/", $fullname_pure) || preg_match("/{$query_pure}/", $username_pure);
 //
 //			if($user->getIsVerified() && $preg_match && !preg_in_array($username_pure, $exclude)) {
 //

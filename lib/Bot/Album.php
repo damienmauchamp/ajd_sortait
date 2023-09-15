@@ -34,7 +34,7 @@ class Album {
 		$this->artist = str_replace('&#x27;', '\'', $item["artist"]);
 		$this->name = str_replace('&#x27;', '\'', $item["album"]);
 		//$this->type = $item["type"];
-		$this->release_date = new \DateTime("${item['year']}-${item['month']}-${item['day']}");
+		$this->release_date = new \DateTime("{$item['year']}-{$item['month']}-{$item['day']}");
 		$this->posted = $item["posted"];
 		$this->post_date = $item["post_date"];
 		$this->artwork = $item["artwork"] ? dirname(dirname(__DIR__)) . $item["artwork"] : null;
@@ -247,17 +247,17 @@ class Album {
 			$artist = $this->artist;
 			if ($artist !== '' && $accord) {
 				if (startsWithVowel($artist)) {
-					return "d'${artist} ";
+					return "d'{$artist} ";
 				} else if (startsWith(strtolower($artist), "les")) {
 					$artist = preg_replace("/^([lL])es /", "", $artist);
 
-					return "des ${artist} ";
+					return "des {$artist} ";
 				} else if (startsWith(strtolower($artist), "le")) {
 					$artist = preg_replace("/^([lL])e /", "", $artist);
 
-					return "du ${artist} ";
+					return "du {$artist} ";
 				} else {
-					return "de ${artist} ";
+					return "de {$artist} ";
 				}
 			} else if (!$accord) {
 				return $this->artist;

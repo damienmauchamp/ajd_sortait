@@ -2,6 +2,8 @@
 
 namespace Bot\Post;
 
+use Bot\Album;
+
 class Post {
 
 	/** @var Album */
@@ -19,7 +21,7 @@ class Post {
 
 	protected $connection;
 
-    public function __construct(\Bot\Album $album)
+    public function __construct(Album $album)
     {
     	$this->album = $album;
     	$this->artist_social = $this->artistSocialsToString($this->getArtistSocial());
@@ -67,7 +69,7 @@ class Post {
 //	    } else {
 //
 //	    }
-//	    $caption .= "\"${name}\" ${artist} sortait il y a ${old} an" . ($old > 1 ? "s" : "") . ".";
+//	    $caption .= "\"{$name}\" {$artist} sortait il y a {$old} an" . ($old > 1 ? "s" : "") . ".";
 //		return $caption;
 		// v2
 		$captions = [
@@ -121,7 +123,7 @@ class Post {
 			strstr(mb_strtolower($artist), "various artists")) {
 			foreach ($captions as &$caption) {
 				$caption = str_replace(" de {{artist}}", "", $caption);
-				$caption = preg_replace('/^{{artist}}/ ', '', $caption);
+				$caption = preg_replace('/^{{artist}}/', '', $caption);
 			}
 		}
 
@@ -135,7 +137,7 @@ class Post {
 			}
 			foreach ($captions as &$caption) {
 //				$caption = str_replace(" de {{artist}}", "", $caption);
-				$caption = preg_replace('/^{{artist}}/ ', '', $caption);
+				$caption = preg_replace('/^{{artist}}/', '', $caption);
 			}
 		} else {
 			$artist = trim($this->album->getArtist(true,false));
@@ -143,7 +145,7 @@ class Post {
 				$artist = '';
 				foreach ($captions as &$caption) {
 					$caption = str_replace(" de {{artist}}", "", $caption);
-					$caption = preg_replace('/^{{artist}}/ ', '', $caption);
+					$caption = preg_replace('/^{{artist}}/', '', $caption);
 				}
 			}
 		}
